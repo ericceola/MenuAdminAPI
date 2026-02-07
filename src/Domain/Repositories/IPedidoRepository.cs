@@ -11,14 +11,13 @@ public interface IPedidoRepository
     Task<IEnumerable<Pedido>> ObterPorEstabelecimentoAsync(Guid estabelecimentoId);
     Task<IEnumerable<Pedido>> ObterPorClienteAsync(Guid clienteId);
     Task<IEnumerable<Pedido>> ObterPorPeriodoAsync(Guid estabelecimentoId, DateTime dataInicio, DateTime dataFim);
-    Task<IEnumerable<Pedido>> ObterPorStatusAsync(Guid estabelecimentoId, string status);
-    Task<IEnumerable<Pedido>> BuscarAsync(string termo);
+    Task<IEnumerable<Pedido>> ObterPorStatusAsync(Guid estabelecimentoId, int status);
     Task AdicionarAsync(Pedido pedido);
     Task AtualizarAsync(Pedido pedido);
     Task RemoverAsync(Guid id);
     Task<bool> ExisteAsync(Guid id);
     Task<int> ContarPorEstabelecimentoAsync(Guid estabelecimentoId);
-    Task MudarStatusAsync(Guid id, string novoStatus);
+    Task MudarStatusAsync(Guid id, int novoStatus);
     Task CancelarAsync(Guid id, string motivo);
     Task DeletarComCascataAsync(Guid id);
 }

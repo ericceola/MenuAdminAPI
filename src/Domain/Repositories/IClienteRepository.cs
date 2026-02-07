@@ -13,8 +13,8 @@ public interface IClienteRepository
     Task AdicionarAsync(Cliente cliente);
     Task AtualizarAsync(Cliente cliente);
     Task RemoverAsync(Guid id);
-    Task<bool> EmailJaExisteAsync(Guid estabelecimentoId, string email, Guid? idExcluir = null);
-    Task<bool> CpfJaExisteAsync(Guid estabelecimentoId, string cpf, Guid? idExcluir = null);
+    Task<bool> EmailJaExisteAsync(string email, Guid? idExcluir = null);
+    Task<bool> CpfJaExisteAsync(string cpf, Guid? idExcluir = null);
     Task<bool> ExisteAsync(Guid id);
     Task<int> ContarPorEstabelecimentoAsync(Guid estabelecimentoId);
     Task AtivarAsync(Guid id);

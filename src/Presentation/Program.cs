@@ -33,7 +33,8 @@ var jwtIssuer = jwtSettings["Issuer"] ?? "MenuAdminAPI";
 var jwtAudience = jwtSettings["Audience"] ?? "MenuAdminAPI";
 var jwtExpirationMinutes = int.Parse(jwtSettings["ExpirationMinutes"] ?? "60");
 
-builder.Services.AddApplicationServices(jwtSecret, jwtIssuer, jwtAudience, jwtExpirationMinutes);
+// builder.Services.AddApplicationServices(jwtSecret, jwtIssuer, jwtAudience, jwtExpirationMinutes);
+// TODO: Implementar AddApplicationServices na camada de Application
 
 // Configurar Autenticação JWT
 var key = Encoding.ASCII.GetBytes(jwtSecret);

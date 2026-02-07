@@ -10,7 +10,7 @@ public interface IEstabelecimentoRepository
     Task<Estabelecimento?> ObterPorIdAsync(Guid id);
     Task<IEnumerable<Estabelecimento>> ObterTodosAsync();
     Task<IEnumerable<Estabelecimento>> ObterAtivosAsync();
-    Task<IEnumerable<Estabelecimento>> ObterPorPlanoAsync(string plano);
+    Task<IEnumerable<Estabelecimento>> ObterPorPlanoAsync(int plano);
     Task<IEnumerable<Estabelecimento>> BuscarAsync(string termo);
     Task AdicionarAsync(Estabelecimento estabelecimento);
     Task AtualizarAsync(Estabelecimento estabelecimento);

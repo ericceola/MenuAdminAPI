@@ -14,7 +14,7 @@ public interface ICategoriaRepository
     Task AdicionarAsync(Categoria categoria);
     Task AtualizarAsync(Categoria categoria);
     Task RemoverAsync(Guid id);
-    Task<bool> NomeJaExisteAsync(Guid estabelecimentoId, string nome, Guid? idExcluir = null);
+    Task<bool> NomeJaExisteAsync(string nome, Guid estabelecimentoId, Guid? idExcluir = null);
     Task<bool> ExisteAsync(Guid id);
     Task<int> ContarPorEstabelecimentoAsync(Guid estabelecimentoId);
     Task AtivarAsync(Guid id);
