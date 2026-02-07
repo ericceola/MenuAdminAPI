@@ -24,6 +24,9 @@
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>..\..\obj\$(Configuration)\Application\</IntermediateOutputPath>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+  </ItemGroup>
 
   <!-- Referências de Projetos -->
   <ItemGroup>
@@ -31,9 +34,5 @@
   </ItemGroup>
 
   <!-- NuGet Packages -->
-  <ItemGroup>
-    <!-- Validation -->
-    <PackageReference Include="FluentValidation" Version="11.8.0" />
-  </ItemGroup>
 
 </Project>
