@@ -34,8 +34,8 @@
   <!-- NuGet Packages -->
   <ItemGroup>
     <!-- Database & ORM -->
-    <PackageReference Include="Dapper" Version="2.0.123" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+    <PackageReference Include="Dapper" Version="2.1.15" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
 
     <!-- Logging -->
     <PackageReference Include="Serilog" Version="3.1.1" />

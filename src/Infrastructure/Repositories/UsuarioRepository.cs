@@ -145,6 +145,19 @@ public class UsuarioRepository : RepositoryBase<Usuario>, IUsuarioRepository
     }
 
     /// <summary>
+    /// Atualizar último acesso
+    /// </summary>
+    public async Task AtualizarUltimoAcessoAsync(Guid id)
+    {
+        const string sql = @"
+            UPDATE Usuarios
+            SET DataAtualizacao = GETUTCDATE()
+            WHERE Id = @Id";
+
+        await _connection.ExecuteAsync(sql, new { Id = id });
+    }
+
+    /// <summary>
     /// Contar usuários ativos
     /// </summary>
     public async Task<int> ContarAtivosAsync()

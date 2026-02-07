@@ -14,7 +14,7 @@ public interface IVarianteRepository
     Task AdicionarAsync(Variante variante);
     Task AtualizarAsync(Variante variante);
     Task RemoverAsync(Guid id);
-    Task<bool> NomeJaExisteAsync(Guid produtoId, string nome, Guid? idExcluir = null);
+    Task<bool> NomeJaExisteAsync(string nome, Guid produtoId, Guid? idExcluir = null);
     Task<bool> ExisteAsync(Guid id);
     Task<int> ContarPorProdutoAsync(Guid produtoId);
     Task AtivarAsync(Guid id);
