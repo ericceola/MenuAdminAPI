@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <AssemblyName>MenuAdminAPI.Infrastructure</AssemblyName>
+    <RootNamespace>MenuAdminAPI.Infrastructure</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Descrição do Projeto -->
+  <PropertyGroup>
+    <Description>Infrastructure Layer - Repositories, Database e Configurações do MenuAdminAPI</Description>
+    <Authors>Menu Admin Team</Authors>
+    <Company>Menu Admin</Company>
+    <Product>MenuAdminAPI</Product>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <!-- Diretórios de Saída -->
+  <PropertyGroup>
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>..\..\obj\$(Configuration)\Infrastructure\</IntermediateOutputPath>
+  </PropertyGroup>
+
+  <!-- Referências de Projetos -->
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\MenuAdminAPI.Domain.csproj" />
+    <ProjectReference Include="..\Application\MenuAdminAPI.Application.csproj" />
+  </ItemGroup>
+
+  <!-- NuGet Packages -->
+  <ItemGroup>
+    <!-- Database & ORM -->
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+
+    <!-- Logging -->
+    <PackageReference Include="Serilog" Version="3.1.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+
+    <!-- Microsoft Extensions -->
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>

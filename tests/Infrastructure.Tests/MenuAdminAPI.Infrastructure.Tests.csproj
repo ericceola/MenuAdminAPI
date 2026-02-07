@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsTestProject>true</IsTestProject>
+    <AssemblyName>MenuAdminAPI.Infrastructure.Tests</AssemblyName>
+    <RootNamespace>MenuAdminAPI.Infrastructure.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Descrição do Projeto -->
+  <PropertyGroup>
+    <Description>Integration Tests para Infrastructure Layer do MenuAdminAPI</Description>
+    <Authors>Menu Admin Team</Authors>
+    <Company>Menu Admin</Company>
+    <Product>MenuAdminAPI</Product>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <!-- Diretórios de Saída -->
+  <PropertyGroup>
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>..\..\obj\$(Configuration)\Infrastructure.Tests\</IntermediateOutputPath>
+  </PropertyGroup>
+
+  <!-- Referências de Projetos -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Domain\MenuAdminAPI.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Application\MenuAdminAPI.Application.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\MenuAdminAPI.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <!-- NuGet Packages -->
+  <ItemGroup>
+    <!-- Testing -->
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.2" />
+    <PackageReference Include="xunit" Version="2.6.6" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Moq" Version="4.20.70" />
+    <PackageReference Include="FluentAssertions" Version="6.12.0" />
+    <PackageReference Include="Testcontainers" Version="3.6.0" />
+    <PackageReference Include="Testcontainers.MsSql" Version="3.6.0" />
+  </ItemGroup>
+
+</Project>

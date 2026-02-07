@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <AssemblyName>MenuAdminAPI.Domain</AssemblyName>
+    <RootNamespace>MenuAdminAPI.Domain</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Descrição do Projeto -->
+  <PropertyGroup>
+    <Description>Domain Layer - Entidades, Value Objects e Interfaces do MenuAdminAPI</Description>
+    <Authors>Menu Admin Team</Authors>
+    <Company>Menu Admin</Company>
+    <Product>MenuAdminAPI</Product>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <!-- Diretórios de Saída -->
+  <PropertyGroup>
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>..\..\obj\$(Configuration)\Domain\</IntermediateOutputPath>
+  </PropertyGroup>
+
+  <!-- Nenhuma dependência externa necessária para o Domain Layer -->
+  <!-- O Domain Layer deve ser independente e não ter dependências de outras camadas -->
+
+</Project>

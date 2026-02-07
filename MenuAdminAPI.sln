@@ -1,0 +1,84 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A1B2C3D4-E5F6-47G8-H9I0-J1K2L3M4N5O6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B2C3D4E5-F6G7-48H9-I0J1-K2L3M4N5O6P7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{C3D4E5F6-G7H8-49I0-J1K2-L3M4N5O6P7Q8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{D4E5F6G7-H8I9-40J1-K2L3-M4N5O6P7Q8R9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MenuAdminAPI.Domain", "src\Domain\MenuAdminAPI.Domain.csproj", "{E5F6G7H8-I9J0-41K2-L3M4-N5O6P7Q8R9S0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MenuAdminAPI.Application", "src\Application\MenuAdminAPI.Application.csproj", "{F6G7H8I9-J0K1-42L3-M4N5-O6P7Q8R9S0T1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MenuAdminAPI.Infrastructure", "src\Infrastructure\MenuAdminAPI.Infrastructure.csproj", "{G7H8I9J0-K1L2-43M4-N5O6-P7Q8R9S0T1U2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MenuAdminAPI.Presentation", "src\Presentation\MenuAdminAPI.Presentation.csproj", "{H8I9J0K1-L2M3-44N5-O6P7-Q8R9S0T1U2V3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MenuAdminAPI.Domain.Tests", "tests\Domain.Tests\MenuAdminAPI.Domain.Tests.csproj", "{I9J0K1L2-M3N4-45O6-P7Q8-R9S0T1U2V3W4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MenuAdminAPI.Application.Tests", "tests\Application.Tests\MenuAdminAPI.Application.Tests.csproj", "{J0K1L2M3-N4O5-46P7-Q8R9-S0T1U2V3W4X5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MenuAdminAPI.Infrastructure.Tests", "tests\Infrastructure.Tests\MenuAdminAPI.Infrastructure.Tests.csproj", "{K1L2M3N4-O5P6-47Q8-R9S0-T1U2V3W4X5Y6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MenuAdminAPI.Presentation.Tests", "tests\Presentation.Tests\MenuAdminAPI.Presentation.Tests.csproj", "{L2M3N4O5-P6Q7-48R9-S0T1-U2V3W4X5Y6Z7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E5F6G7H8-I9J0-41K2-L3M4-N5O6P7Q8R9S0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5F6G7H8-I9J0-41K2-L3M4-N5O6P7Q8R9S0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5F6G7H8-I9J0-41K2-L3M4-N5O6P7Q8R9S0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5F6G7H8-I9J0-41K2-L3M4-N5O6P7Q8R9S0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6G7H8I9-J0K1-42L3-M4N5-O6P7Q8R9S0T1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6G7H8I9-J0K1-42L3-M4N5-O6P7Q8R9S0T1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6G7H8I9-J0K1-42L3-M4N5-O6P7Q8R9S0T1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6G7H8I9-J0K1-42L3-M4N5-O6P7Q8R9S0T1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{G7H8I9J0-K1L2-43M4-N5O6-P7Q8R9S0T1U2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{G7H8I9J0-K1L2-43M4-N5O6-P7Q8R9S0T1U2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{G7H8I9J0-K1L2-43M4-N5O6-P7Q8R9S0T1U2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{G7H8I9J0-K1L2-43M4-N5O6-P7Q8R9S0T1U2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{H8I9J0K1-L2M3-44N5-O6P7-Q8R9S0T1U2V3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{H8I9J0K1-L2M3-44N5-O6P7-Q8R9S0T1U2V3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{H8I9J0K1-L2M3-44N5-O6P7-Q8R9S0T1U2V3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{H8I9J0K1-L2M3-44N5-O6P7-Q8R9S0T1U2V3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{I9J0K1L2-M3N4-45O6-P7Q8-R9S0T1U2V3W4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{I9J0K1L2-M3N4-45O6-P7Q8-R9S0T1U2V3W4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{I9J0K1L2-M3N4-45O6-P7Q8-R9S0T1U2V3W4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{I9J0K1L2-M3N4-45O6-P7Q8-R9S0T1U2V3W4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{J0K1L2M3-N4O5-46P7-Q8R9-S0T1U2V3W4X5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{J0K1L2M3-N4O5-46P7-Q8R9-S0T1U2V3W4X5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{J0K1L2M3-N4O5-46P7-Q8R9-S0T1U2V3W4X5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{J0K1L2M3-N4O5-46P7-Q8R9-S0T1U2V3W4X5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{K1L2M3N4-O5P6-47Q8-R9S0-T1U2V3W4X5Y6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{K1L2M3N4-O5P6-47Q8-R9S0-T1U2V3W4X5Y6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{K1L2M3N4-O5P6-47Q8-R9S0-T1U2V3W4X5Y6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{K1L2M3N4-O5P6-47Q8-R9S0-T1U2V3W4X5Y6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{L2M3N4O5-P6Q7-48R9-S0T1-U2V3W4X5Y6Z7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{L2M3N4O5-P6Q7-48R9-S0T1-U2V3W4X5Y6Z7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{L2M3N4O5-P6Q7-48R9-S0T1-U2V3W4X5Y6Z7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{L2M3N4O5-P6Q7-48R9-S0T1-U2V3W4X5Y6Z7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E5F6G7H8-I9J0-41K2-L3M4-N5O6P7Q8R9S0} = {A1B2C3D4-E5F6-47G8-H9I0-J1K2L3M4N5O6}
+		{F6G7H8I9-J0K1-42L3-M4N5-O6P7Q8R9S0T1} = {A1B2C3D4-E5F6-47G8-H9I0-J1K2L3M4N5O6}
+		{G7H8I9J0-K1L2-43M4-N5O6-P7Q8R9S0T1U2} = {A1B2C3D4-E5F6-47G8-H9I0-J1K2L3M4N5O6}
+		{H8I9J0K1-L2M3-44N5-O6P7-Q8R9S0T1U2V3} = {A1B2C3D4-E5F6-47G8-H9I0-J1K2L3M4N5O6}
+		{I9J0K1L2-M3N4-45O6-P7Q8-R9S0T1U2V3W4} = {B2C3D4E5-F6G7-48H9-I0J1-K2L3M4N5O6P7}
+		{J0K1L2M3-N4O5-46P7-Q8R9-S0T1U2V3W4X5} = {B2C3D4E5-F6G7-48H9-I0J1-K2L3M4N5O6P7}
+		{K1L2M3N4-O5P6-47Q8-R9S0-T1U2V3W4X5Y6} = {B2C3D4E5-F6G7-48H9-I0J1-K2L3M4N5O6P7}
+		{L2M3N4O5-P6Q7-48R9-S0T1-U2V3W4X5Y6Z7} = {B2C3D4E5-F6G7-48H9-I0J1-K2L3M4N5O6P7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AAAABBBB-CCCC-DDDD-EEEE-FFFF00001111}
+	EndGlobalSection
+EndGlobal

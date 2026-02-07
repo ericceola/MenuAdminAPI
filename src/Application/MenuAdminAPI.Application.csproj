@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <AssemblyName>MenuAdminAPI.Application</AssemblyName>
+    <RootNamespace>MenuAdminAPI.Application</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Descrição do Projeto -->
+  <PropertyGroup>
+    <Description>Application Layer - Services, DTOs e Mappings do MenuAdminAPI</Description>
+    <Authors>Menu Admin Team</Authors>
+    <Company>Menu Admin</Company>
+    <Product>MenuAdminAPI</Product>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <!-- Diretórios de Saída -->
+  <PropertyGroup>
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>..\..\obj\$(Configuration)\Application\</IntermediateOutputPath>
+  </PropertyGroup>
+
+  <!-- Referências de Projetos -->
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\MenuAdminAPI.Domain.csproj" />
+  </ItemGroup>
+
+  <!-- NuGet Packages -->
+  <ItemGroup>
+    <!-- Validation -->
+    <PackageReference Include="FluentValidation" Version="11.8.0" />
+  </ItemGroup>
+
+</Project>
