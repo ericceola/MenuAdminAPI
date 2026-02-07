@@ -318,7 +318,7 @@ public class ClientesController : BaseController
     /// Obter estatísticas do cliente
     /// </summary>
     [HttpGet("{id}/estatisticas")]
-    [ProducesResponseType(typeof(ClienteEstatisticasResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ClienteComEstatisticasResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ObterEstatisticas(Guid id)
     {
@@ -327,7 +327,14 @@ public class ClientesController : BaseController
             _logger.LogInformation("Obtendo estatísticas do cliente {ClienteId}", id);
             
             // TODO: Implementar chamada ao service
-            return OkResponse(new ClienteEstatisticasResponse());
+            return OkResponse(new ClienteComEstatisticasResponse(
+                Guid.Empty,
+                string.Empty,
+                string.Empty,
+                0,
+                0m,
+                0m,
+                null));
         }
         catch (InvalidOperationException ex)
         {

@@ -30,33 +30,33 @@ public record CancelarPedidoRequest(
 );
 
 public record PedidoResponse(
-    Guid Id,
-    Guid EstabelecimentoId,
-    Guid ClienteId,
-    string Numero,
-    string Status,
-    decimal Total,
-    string? Observacoes,
-    DateTime DataCriacao
+    Guid Id = default,
+    Guid EstabelecimentoId = default,
+    Guid ClienteId = default,
+    string Numero = "",
+    string Status = "",
+    decimal Total = 0m,
+    string? Observacoes = null,
+    DateTime DataCriacao = default
 );
 
 public record ItemPedidoResponse(
-    Guid Id,
-    Guid PedidoId,
-    Guid ProdutoId,
-    int Quantidade,
-    decimal PrecoUnitario,
-    decimal Subtotal,
-    string? Observacoes
+    Guid Id = default,
+    Guid PedidoId = default,
+    Guid ProdutoId = default,
+    int Quantidade = 0,
+    decimal PrecoUnitario = 0m,
+    decimal Subtotal = 0m,
+    string? Observacoes = null
 );
 
 public record AdicionalPedidoResponse(
-    Guid Id,
-    Guid ItemPedidoId,
-    Guid AdicionalId,
-    int Quantidade,
-    decimal Preco,
-    decimal Subtotal
+    Guid Id = default,
+    Guid ItemPedidoId = default,
+    Guid AdicionalId = default,
+    int Quantidade = 0,
+    decimal Preco = 0m,
+    decimal Subtotal = 0m
 );
 
 public record ItemPedidoComAdicionaisResponse(
@@ -78,11 +78,11 @@ public record PedidoComItensResponse(
 );
 
 public record PedidoEstatisticasResponse(
-    int TotalPedidos,
-    int Pendentes,
-    int Confirmados,
-    int Entregues,
-    int Cancelados,
-    decimal ReceitaTotal,
-    decimal TicketMedio
+    int TotalPedidos = 0,
+    int Pendentes = 0,
+    int Confirmados = 0,
+    int Entregues = 0,
+    int Cancelados = 0,
+    decimal ReceitaTotal = 0m,
+    decimal TicketMedio = 0m
 );

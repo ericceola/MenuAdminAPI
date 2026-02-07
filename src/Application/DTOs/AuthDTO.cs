@@ -6,14 +6,14 @@ public record LoginRequest(
 );
 
 public record LoginResponse(
-    Guid UsuarioId,
-    string Nome,
-    string Email,
-    string Perfil,
-    Guid EstabelecimentoId,
-    string Token,
-    string RefreshToken,
-    DateTime ExpiracaoToken
+    Guid UsuarioId = default,
+    string Nome = "",
+    string Email = "",
+    string Perfil = "",
+    Guid EstabelecimentoId = default,
+    string Token = "",
+    string RefreshToken = "",
+    DateTime ExpiracaoToken = default
 );
 
 public record RefreshTokenRequest(
@@ -22,9 +22,9 @@ public record RefreshTokenRequest(
 );
 
 public record RefreshTokenResponse(
-    string Token,
-    string RefreshToken,
-    DateTime ExpiracaoToken
+    string Token = "",
+    string RefreshToken = "",
+    DateTime ExpiracaoToken = default
 );
 
 public record CriarUsuarioRequest(
@@ -42,14 +42,14 @@ public record AtualizarUsuarioRequest(
 );
 
 public record UsuarioResponse(
-    Guid Id,
-    Guid EstabelecimentoId,
-    string Nome,
-    string Email,
-    string Perfil,
-    bool Ativo,
-    DateTime DataCriacao,
-    DateTime? UltimoAcesso
+    Guid Id = default,
+    Guid EstabelecimentoId = default,
+    string Nome = "",
+    string Email = "",
+    string Perfil = "",
+    bool Ativo = false,
+    DateTime DataCriacao = default,
+    DateTime? UltimoAcesso = null
 );
 
 public record AlterarSenhaRequest(
