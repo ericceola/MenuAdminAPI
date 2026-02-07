@@ -134,7 +134,7 @@ public class UsuarioRepository : RepositoryBase<Usuario>, IUsuarioRepository
     /// <summary>
     /// Atualizar senha
     /// </summary>
-    public async Task AtualizarSenhaAsync(Guid id, string novaSenh aHash)
+    public async Task AtualizarSenhaAsync(Guid id, string novaSenhaHash)
     {
         const string sql = @"
             UPDATE Usuarios
