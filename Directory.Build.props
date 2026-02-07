@@ -22,7 +22,7 @@
     
     <!-- Paths -->
     <BaseOutputPath>$(MSBuildThisFileDirectory)bin\</BaseOutputPath>
-    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
   </PropertyGroup>
 
   <!-- Configurações de Build -->

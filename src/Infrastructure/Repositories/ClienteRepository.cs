@@ -227,7 +227,7 @@ public class ClienteEstatisticas
 public class ClienteMaisPedidos
 {
     public Guid Id { get; set; }
-    public string Nome { get; set; }
+    public string Nome { get; set; } = string.Empty;
     public int TotalPedidos { get; set; }
     public decimal ValorTotalGasto { get; set; }
     public DateTime? UltimoPedido { get; set; }
