@@ -21,6 +21,6 @@ public interface IUsuarioRepository
     Task<int> ContarAtivosAsync();
     Task AtivarAsync(Guid id);
     Task DesativarAsync(Guid id);
-    Task AtualizarSenhaAsync(Guid id, string novaSenh aHash);
+    Task AtualizarSenhaAsync(Guid id, string novaSenhaHash);
     Task AtualizarUltimoAcessoAsync(Guid id);
 }

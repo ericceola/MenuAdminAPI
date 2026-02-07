@@ -62,11 +62,7 @@ public static class DependencyInjection
     /// Registrar serviços de aplicação
     /// </summary>
     public static IServiceCollection AddApplicationServices(
-        this IServiceCollection services,
-        string jwtSecret,
-        string jwtIssuer,
-        string jwtAudience,
-        int jwtExpirationMinutes)
+        this IServiceCollection services)
     {
         // Registrar serviços de aplicação
         services.AddScoped<IEstabelecimentoService, EstabelecimentoService>();
@@ -76,18 +72,7 @@ public static class DependencyInjection
         services.AddScoped<IClienteService, ClienteService>();
         services.AddScoped<IPedidoService, PedidoService>();
         services.AddScoped<IUsuarioService, UsuarioService>();
-
-        // Registrar serviço de autenticação com configurações JWT
-        services.AddScoped<IAuthService>(provider =>
-        {
-            var unitOfWork = provider.GetRequiredService<IUnitOfWork>();
-            return new AuthService(
-                unitOfWork,
-                jwtSecret,
-                jwtIssuer,
-                jwtAudience,
-                jwtExpirationMinutes);
-        });
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }
