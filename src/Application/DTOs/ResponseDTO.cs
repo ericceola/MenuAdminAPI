@@ -18,11 +18,11 @@ public record ApiResponse<T>(
 }
 
 public record PaginatedResponse<T>(
-    IEnumerable<T> Dados,
-    int PaginaAtual,
-    int TamanhoPagina,
-    int TotalRegistros,
-    int TotalPaginas
+    IEnumerable<T> Dados = null!,
+    int PaginaAtual = 1,
+    int TamanhoPagina = 10,
+    int TotalRegistros = 0,
+    int TotalPaginas = 0
 )
 {
     public bool TemProxima => PaginaAtual < TotalPaginas;

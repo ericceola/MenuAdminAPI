@@ -70,9 +70,17 @@ public abstract class BaseController : ControllerBase
     }
 
     /// <summary>
+    /// Retornar resposta Created sem location explícita
+    /// </summary>
+    protected IActionResult CreatedResponse<T>(T dados, string mensagem = "Recurso criado com sucesso")
+    {
+        return Created(string.Empty, new { sucesso = true, mensagem, dados });
+    }
+
+    /// <summary>
     /// Retornar resposta BadRequest
     /// </summary>
-    protected IActionResult BadRequestResponse(string mensagem, IEnumerable<string>? erros = null)
+    protected IActionResult BadRequestResponse(string mensagem = "Requisição inválida", IEnumerable<string>? erros = null)
     {
         return BadRequest(new { sucesso = false, mensagem, erros });
     }
@@ -88,7 +96,7 @@ public abstract class BaseController : ControllerBase
     /// <summary>
     /// Retornar resposta Conflict
     /// </summary>
-    protected IActionResult ConflictResponse(string mensagem)
+    protected IActionResult ConflictResponse(string mensagem = "Conflito na operação")
     {
         return Conflict(new { sucesso = false, mensagem });
     }

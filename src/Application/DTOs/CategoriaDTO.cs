@@ -27,23 +27,23 @@ public record AtualizarSubcategoriaRequest(
 );
 
 public record CategoriaResponse(
-    Guid Id,
-    Guid EstabelecimentoId,
-    string Nome,
-    string Descricao,
-    int Ordem,
-    bool Ativo,
-    DateTime DataCriacao
+    Guid Id = default,
+    Guid EstabelecimentoId = default,
+    string Nome = "",
+    string Descricao = "",
+    int Ordem = 0,
+    bool Ativo = false,
+    DateTime DataCriacao = default
 );
 
 public record SubcategoriaResponse(
-    Guid Id,
-    Guid CategoriaId,
-    string Nome,
-    string Descricao,
-    int Ordem,
-    bool Ativo,
-    DateTime DataCriacao
+    Guid Id = default,
+    Guid CategoriaId = default,
+    string Nome = "",
+    string Descricao = "",
+    int Ordem = 0,
+    bool Ativo = false,
+    DateTime DataCriacao = default
 );
 
 public record CategoriaComSubcategoriasResponse(

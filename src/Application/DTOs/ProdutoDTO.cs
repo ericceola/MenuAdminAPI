@@ -38,30 +38,30 @@ public record AtualizarAdicionalRequest(
 );
 
 public record ProdutoResponse(
-    Guid Id,
-    Guid SubcategoriaId,
-    string Nome,
-    string Descricao,
-    decimal Preco,
-    string? ImagemUrl,
-    bool Ativo,
-    DateTime DataCriacao
+    Guid Id = default,
+    Guid SubcategoriaId = default,
+    string Nome = "",
+    string Descricao = "",
+    decimal Preco = 0m,
+    string? ImagemUrl = null,
+    bool Ativo = false,
+    DateTime DataCriacao = default
 );
 
 public record VarianteResponse(
-    Guid Id,
-    Guid ProdutoId,
-    string Nome,
-    decimal PrecoAdicional,
-    bool Ativo
+    Guid Id = default,
+    Guid ProdutoId = default,
+    string Nome = "",
+    decimal PrecoAdicional = 0m,
+    bool Ativo = false
 );
 
 public record AdicionalResponse(
-    Guid Id,
-    Guid ProdutoId,
-    string Nome,
-    decimal Preco,
-    bool Ativo
+    Guid Id = default,
+    Guid ProdutoId = default,
+    string Nome = "",
+    decimal Preco = 0m,
+    bool Ativo = false
 );
 
 public record ProdutoComDetalhesResponse(
