@@ -21,14 +21,28 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Configurar Infraestrutura
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' não foi encontrada.");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Se não encontrar em appsettings, tentar variável de ambiente
+if (string.IsNullOrEmpty(connectionString))
+{
+    connectionString = Environment.GetEnvironmentVariable("ConnectionString") 
+        ?? Environment.GetEnvironmentVariable("ASPNETCORE_CONNECTIONSTRING")
+        ?? throw new InvalidOperationException("Connection string não foi encontrada.");
+}
 
 builder.Services.AddInfrastructure(connectionString);
 
 // Configurar JWT
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-var jwtSecret = jwtSettings["Secret"] ?? throw new InvalidOperationException("JWT Secret não configurado");
+var jwtSecret = jwtSettings["Secret"];
+
+if (string.IsNullOrEmpty(jwtSecret))
+{
+    jwtSecret = Environment.GetEnvironmentVariable("JwtSecret") 
+        ?? "your-super-secret-key-that-must-be-at-least-32-characters-long-for-security";
+}
+
 var jwtIssuer = jwtSettings["Issuer"] ?? "MenuAdminAPI";
 var jwtAudience = jwtSettings["Audience"] ?? "MenuAdminAPI";
 var jwtExpirationMinutes = int.Parse(jwtSettings["ExpirationMinutes"] ?? "60");
