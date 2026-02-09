@@ -33,17 +33,6 @@ jobs:
     - name: Publicar API
       run: dotnet publish src/Presentation/MenuAdminAPI.Presentation.csproj --configuration Release --output ./publish
     
-    - name: Fazer commit e push das mudanças
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add -A
-        git commit -m "Build automático: Publicar API [skip ci]" || true
-        git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
     - name: Criar Release
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       uses: actions/create-release@v1
