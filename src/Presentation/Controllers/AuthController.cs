@@ -37,8 +37,8 @@ public class AuthController : BaseController
 
             _logger.LogInformation("Tentativa de login para usuário: {Email}", request.Email);
             
-            // TODO: Implementar chamada ao service
-            return OkResponse(new LoginResponse());
+            var response = await _authService.LoginAsync(request);
+            return OkResponse(response);
         }
         catch (ArgumentException ex)
         {
@@ -73,8 +73,8 @@ public class AuthController : BaseController
 
             _logger.LogInformation("Renovando token JWT");
             
-            // TODO: Implementar chamada ao service
-            return OkResponse(new RefreshTokenResponse());
+            var response = await _authService.RefreshTokenAsync(request);
+            return OkResponse(response);
         }
         catch (ArgumentException ex)
         {
@@ -113,8 +113,8 @@ public class AuthController : BaseController
 
             _logger.LogInformation("Obtendo dados do usuário autenticado: {UsuarioId}", usuarioId);
             
-            // TODO: Implementar chamada ao service
-            return OkResponse(new UsuarioResponse());
+            var response = await _authService.ObterUsuarioAutenticadoAsync(usuarioId);
+            return OkResponse(response);
         }
         catch (Exception ex)
         {
@@ -147,7 +147,7 @@ public class AuthController : BaseController
 
             _logger.LogInformation("Alterando senha do usuário: {UsuarioId}", usuarioId);
             
-            // TODO: Implementar chamada ao service
+            await _authService.AlterarSenhaAsync(usuarioId, request);
             return NoContent();
         }
         catch (ArgumentException ex)
@@ -184,7 +184,7 @@ public class AuthController : BaseController
 
             _logger.LogInformation("Resetando senha para usuário: {Email}", request.Email);
             
-            // TODO: Implementar chamada ao service
+            await _authService.ResetarSenhaAsync(request);
             return NoContent();
         }
         catch (ArgumentException ex)
@@ -220,7 +220,7 @@ public class AuthController : BaseController
 
             _logger.LogInformation("Validando token JWT");
             
-            // TODO: Implementar chamada ao service
+            // TODO: Implementar validação de token com IJwtService
             return OkResponse(new { valido = true });
         }
         catch (ArgumentException ex)
