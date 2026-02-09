@@ -62,7 +62,6 @@ jobs:
           **Data:** ${{ github.event.head_commit.timestamp }}
         draft: false
         prerelease: false
-        files: ./publish/**
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
