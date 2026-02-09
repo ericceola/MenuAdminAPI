@@ -33,24 +33,6 @@ jobs:
     - name: Publicar API
       run: dotnet publish src/Presentation/MenuAdminAPI.Presentation.csproj --configuration Release --output ./publish
     
-    - name: Criar Release
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: v${{ github.run_number }}
-        name: Release v${{ github.run_number }}
-        body: |
-          API MenuAdminAPI publicada automaticamente
-          
-          **Commit:** ${{ github.sha }}
-          **Autor:** ${{ github.actor }}
-          **Data:** ${{ github.event.head_commit.timestamp }}
-        draft: false
-        prerelease: false
-        files: ./publish/**
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
     - name: Upload artefatos
       uses: actions/upload-artifact@v4
       with:
