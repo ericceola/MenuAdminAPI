@@ -1,0 +1,30 @@
+namespace MenuAdminAPI.Domain.Entities;
+
+/// <summary>
+/// Entidade de Estabelecimento (Restaurante, Pizzaria, etc)
+/// </summary>
+public class Estabelecimento
+{
+    public Guid Id { get; set; }
+    public string Nome { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string Telefone { get; set; } = string.Empty;
+    public string CNPJ { get; set; } = string.Empty;
+    public string Endereco { get; set; } = string.Empty;
+    public string Numero { get; set; } = string.Empty;
+    public string Complemento { get; set; } = string.Empty;
+    public string Bairro { get; set; } = string.Empty;
+    public string Cidade { get; set; } = string.Empty;
+    public string Estado { get; set; } = string.Empty;
+    public string CEP { get; set; } = string.Empty;
+    public string Plano { get; set; } = "Básico";
+    public bool Ativo { get; set; } = true;
+    public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
+    public DateTime DataAtualizacao { get; set; } = DateTime.UtcNow;
+
+    // Relacionamentos
+    public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
+    public ICollection<Categoria> Categorias { get; set; } = new List<Categoria>();
+    public ICollection<Cliente> Clientes { get; set; } = new List<Cliente>();
+    public ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>();
+}
