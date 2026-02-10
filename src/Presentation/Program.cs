@@ -106,11 +106,10 @@ try
     var app = builder.Build();
 
     // Configurar pipeline HTTP
-    if (app.Environment.IsDevelopment())
-    {
+   
         app.UseSwagger();
         app.UseSwaggerUI();
-    }
+    
 
     app.UseHttpsRedirection();
     app.UseCors("AllowAll");
