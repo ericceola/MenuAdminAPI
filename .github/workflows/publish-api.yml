@@ -1,0 +1,73 @@
+name: Publicar API MenuAdminAPI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v3
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Restaurar dependências
+      run: dotnet restore
+    
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    
+    - name: Executar testes
+      run: dotnet test --configuration Release --no-build --verbosity normal || true
+    
+    - name: Publicar API
+      run: dotnet publish src/Presentation/MenuAdminAPI.Presentation.csproj --configuration Release --output ./publish
+    
+    - name: Fazer commit e push das mudanças
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add -A
+        git commit -m "Build automático: Publicar API [skip ci]" || true
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Criar Release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ github.run_number }}
+        name: Release v${{ github.run_number }}
+        body: |
+          API MenuAdminAPI publicada automaticamente
+          
+          **Commit:** ${{ github.sha }}
+          **Autor:** ${{ github.actor }}
+          **Data:** ${{ github.event.head_commit.timestamp }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Upload artefatos
+      uses: actions/upload-artifact@v4
+      with:
+        name: api-publish-${{ github.run_number }}
+        path: ./publish
+        retention-days: 30
