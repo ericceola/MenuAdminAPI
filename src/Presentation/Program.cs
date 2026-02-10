@@ -4,59 +4,77 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurar Serilog
+// ---------- Serilog (Linux-safe) ----------
+var isLinux = OperatingSystem.IsLinux();
+var logFilePath = isLinux
+    ? "/home/LogFiles/MenuAdminAPI-.txt"     // App Service Linux
+    : "logs/MenuAdminAPI-.txt";              // local windows/dev
+
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .WriteTo.Console()
-    .WriteTo.File("logs/MenuAdminAPI-.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.File(logFilePath, rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
 builder.Host.UseSerilog();
 
 try
 {
-    // Adicionar serviços
+    // ---------- Services ----------
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-    // Configurar Infraestrutura
+    // ---------- Connection string (App Service friendly) ----------
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-    // Se não encontrar em appsettings, tentar variável de ambiente
-    if (string.IsNullOrEmpty(connectionString))
+    if (string.IsNullOrWhiteSpace(connectionString))
     {
-        connectionString = Environment.GetEnvironmentVariable("ConnectionString") 
-            ?? Environment.GetEnvironmentVariable("ASPNETCORE_CONNECTIONSTRING")
-            ?? throw new InvalidOperationException("Connection string não foi encontrada em appsettings ou variáveis de ambiente.");
+        // Prefer the standard .NET way (App Settings): ConnectionStrings__DefaultConnection
+        connectionString =
+            Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection") ??
+            // App Service specific prefixes
+            Environment.GetEnvironmentVariable("SQLCONNSTR_DefaultConnection") ??
+            Environment.GetEnvironmentVariable("MYSQLCONNSTR_DefaultConnection") ??
+            Environment.GetEnvironmentVariable("CUSTOMCONNSTR_DefaultConnection") ??
+            // legacy fallback (if you insist on custom names)
+            Environment.GetEnvironmentVariable("ConnectionString") ??
+            Environment.GetEnvironmentVariable("ASPNETCORE_CONNECTIONSTRING");
     }
 
-    Log.Information($"Usando connection string: {(connectionString.Length > 50 ? connectionString.Substring(0, 50) + "..." : connectionString)}");
+    if (string.IsNullOrWhiteSpace(connectionString))
+        throw new InvalidOperationException("Connection string 'DefaultConnection' não foi encontrada. Configure em App Service > Configuration > Connection strings.");
+
+    Log.Information("Connection string 'DefaultConnection' carregada com sucesso.");
 
     builder.Services.AddInfrastructure(connectionString);
 
-    // Configurar JWT
+    // ---------- Application services ----------
+    builder.Services.AddApplicationServices();
+
+    // ---------- JWT ----------
     var jwtSettings = builder.Configuration.GetSection("JwtSettings");
     var jwtSecret = jwtSettings["Secret"];
 
-    if (string.IsNullOrEmpty(jwtSecret))
+    if (string.IsNullOrWhiteSpace(jwtSecret))
     {
-        jwtSecret = Environment.GetEnvironmentVariable("JwtSecret") 
+        jwtSecret = Environment.GetEnvironmentVariable("JwtSecret")
             ?? "your-super-secret-key-that-must-be-at-least-32-characters-long-for-security";
     }
 
-    Log.Information("JWT Secret configurado com sucesso");
+    var jwtIssuer = jwtSettings["Issuer"] ?? Environment.GetEnvironmentVariable("JwtIssuer") ?? "MenuAdminAPI";
+    var jwtAudience = jwtSettings["Audience"] ?? Environment.GetEnvironmentVariable("JwtAudience") ?? "MenuAdminAPI";
 
-    var jwtIssuer = jwtSettings["Issuer"] ?? "MenuAdminAPI";
-    var jwtAudience = jwtSettings["Audience"] ?? "MenuAdminAPI";
-    var jwtExpirationMinutes = int.Parse(jwtSettings["ExpirationMinutes"] ?? "60");
+    // Evitar exception por valor inválido
+    var jwtExpirationMinutesRaw = jwtSettings["ExpirationMinutes"] ?? Environment.GetEnvironmentVariable("JwtExpirationMinutes") ?? "60";
+    if (!int.TryParse(jwtExpirationMinutesRaw, out var jwtExpirationMinutes))
+        jwtExpirationMinutes = 60;
 
-    builder.Services.AddApplicationServices();
-
-    // Configurar Autenticação JWT
     var key = Encoding.ASCII.GetBytes(jwtSecret);
+
     builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -79,13 +97,16 @@ try
         };
     });
 
-    // Configurar CORS
+    Log.Information("JWT configurado com sucesso. Issuer={Issuer} Audience={Audience} ExpMinutes={ExpMinutes}",
+        jwtIssuer, jwtAudience, jwtExpirationMinutes);
+
+    // ---------- CORS ----------
     builder.Services.AddCors(options =>
     {
         var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? new[] { "*" };
-        
-        Log.Information($"CORS Allowed Origins: {string.Join(", ", allowedOrigins)}");
-        
+
+        Log.Information("CORS Allowed Origins: {Origins}", string.Join(", ", allowedOrigins));
+
         options.AddPolicy("AllowAll", policy =>
         {
             if (allowedOrigins.Contains("*"))
@@ -105,20 +126,7 @@ try
 
     var app = builder.Build();
 
-    // Configurar pipeline HTTP
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
-
-    app.UseHttpsRedirection();
-    app.UseCors("AllowAll");
-    app.UseAuthentication();
-    app.UseAuthorization();
-    app.MapControllers();
-
-    // Adicionar middleware de tratamento de erros
+    // ---------- Global error handling (must be early) ----------
     app.Use(async (context, next) =>
     {
         try
@@ -138,7 +146,24 @@ try
         }
     });
 
-    Log.Information("Iniciando MenuAdminAPI");
+    // ---------- HTTP pipeline ----------
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    // Em App Service Linux, o TLS termina no front-end; UseHttpsRedirection é ok, mas não obrigatório.
+    app.UseHttpsRedirection();
+
+    app.UseCors("AllowAll");
+
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+    Log.Information("Iniciando MenuAdminAPI. Environment={Env} OS={OS}", app.Environment.EnvironmentName, isLinux ? "Linux" : "Windows");
     app.Run();
 }
 catch (Exception ex)
