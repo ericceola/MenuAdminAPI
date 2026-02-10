@@ -147,11 +147,10 @@ try
     });
 
     // ---------- HTTP pipeline ----------
-    if (app.Environment.IsDevelopment())
-    {
+   
         app.UseSwagger();
         app.UseSwaggerUI();
-    }
+   
 
     // Em App Service Linux, o TLS termina no front-end; UseHttpsRedirection é ok, mas não obrigatório.
     app.UseHttpsRedirection();
