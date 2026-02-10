@@ -160,7 +160,7 @@ namespace MenuAdminAPI.Presentation.Controllers
                 if (usuario == null)
                     return NotFound("Usuário não encontrado");
 
-                await _unitOfWork.Usuarios.RemoverAsync(usuario);
+                await _unitOfWork.Usuarios.RemoverAsync(usuario.Id);
                 await _unitOfWork.SaveChangesAsync();
 
                 _logger.LogInformation($"Usuário deletado: {usuario.Email}");
@@ -208,9 +208,9 @@ namespace MenuAdminAPI.Presentation.Controllers
     /// </summary>
     public class CriarUsuarioRequest
     {
-        public string Nome { get; set; }
-        public string Email { get; set; }
-        public string Perfil { get; set; }
+        public string? Nome { get; set; }
+        public string? Email { get; set; }
+        public string? Perfil { get; set; }
         public Guid EstabelecimentoId { get; set; }
     }
 
@@ -219,8 +219,8 @@ namespace MenuAdminAPI.Presentation.Controllers
     /// </summary>
     public class AtualizarUsuarioRequest
     {
-        public string Nome { get; set; }
-        public string Perfil { get; set; }
+        public string? Nome { get; set; }
+        public string? Perfil { get; set; }
         public bool? Ativo { get; set; }
     }
 }
