@@ -1,4 +1,6 @@
 using MenuAdminAPI.Application.Services;
+using MenuAdminAPI.Domain.Entities;
+using MenuAdminAPI.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
