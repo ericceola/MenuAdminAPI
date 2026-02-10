@@ -56,12 +56,13 @@
           with:
             app-name: menu-api
             package: ./myapp
-            publish-profile: ${{ AZUREAPPSERVICE_PUBLISHPROFILE_0A4024E078BA43118711DE5E6B44AF5C }}
+            publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0A4024E078BA43118711DE5E6B44AF5C }}
         - name: Deploy to Azure Web App
           uses: azure/webapps-deploy@v3
           with:
             app-name: "menu-api"
             package: ./publish
+
 
 
 
