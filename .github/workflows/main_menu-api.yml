@@ -54,15 +54,16 @@
         - name: Login to Azure
           uses: azure/login@v2
           with:
-            client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
-            tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
-            subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
+            client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_FFEA50B4CED341EEB1CF34719EF035DC }}
+            tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2FD37B25558D45CAB809449EFDDFB74E }}
+            subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9DF48BDB1FD34757BDE477CD86F61BFA }}
   
         - name: Deploy to Azure Web App
           uses: azure/webapps-deploy@v3
           with:
             app-name: "menu-api"
             package: ./publish
+
 
 
 
