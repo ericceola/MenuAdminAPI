@@ -55,6 +55,12 @@ try
 
     builder.Services.AddApplicationServices();
 
+    // Configurar SendGrid Options
+    builder.Services.Configure<MenuAdminAPI.Application.Options.SendGridOptions>(
+        builder.Configuration.GetSection("SendGrid"));
+
+    Log.Information("SendGrid Options configurado com sucesso");
+
     // Configurar Autenticação JWT
     var key = Encoding.ASCII.GetBytes(jwtSecret);
     builder.Services.AddAuthentication(options =>

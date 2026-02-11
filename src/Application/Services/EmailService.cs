@@ -4,6 +4,8 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using MenuAdminAPI.Application.Options;
 
 namespace MenuAdminAPI.Application.Services
 {
@@ -20,25 +22,28 @@ namespace MenuAdminAPI.Application.Services
     public class EmailService : IEmailService
     {
         private readonly SendGridClient _sendGridClient;
-        private readonly IConfiguration _configuration;
         private readonly ILogger<EmailService> _logger;
         private readonly string _fromEmail;
         private readonly string _fromName;
 
-        public EmailService(IConfiguration configuration, ILogger<EmailService> logger)
+        public EmailService(IOptions<SendGridOptions> options, ILogger<EmailService> logger)
         {
-            _configuration = configuration;
             _logger = logger;
 
-            var apiKey = configuration["SendGrid:ApiKey"];
-            if (string.IsNullOrEmpty(apiKey))
+            var sendGridOptions = options.Value;
+
+            // Validar se a chave de API foi configurada
+            if (string.IsNullOrEmpty(sendGridOptions.ApiKey))
             {
-                throw new InvalidOperationException("SendGrid API Key não configurada. Configure a variável de ambiente SendGrid:ApiKey");
+                throw new InvalidOperationException(
+                    "SendGrid API Key não configurada. Configure a variável de ambiente SendGrid__ApiKey ou adicione a seção SendGrid no appsettings.json");
             }
 
-            _sendGridClient = new SendGridClient(apiKey);
-            _fromEmail = configuration["SendGrid:FromEmail"] ?? "noreply@menuadminapi.com";
-            _fromName = configuration["SendGrid:FromName"] ?? "Menu Admin";
+            _sendGridClient = new SendGridClient(sendGridOptions.ApiKey);
+            _fromEmail = sendGridOptions.FromEmail ?? "noreply@menuadminapi.com";
+            _fromName = sendGridOptions.FromName ?? "Menu Admin";
+
+            _logger.LogInformation($"EmailService inicializado com sucesso. From: {_fromEmail} ({_fromName})");
         }
 
         /// <summary>
