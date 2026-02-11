@@ -60,7 +60,7 @@ public class AuthService : IAuthService
         }
 
         // Verificar senha
-        if (!VerificarSenha(request.Senha, usuario.SenhaHash))
+        if (!VerificarSenha(request.Senha, usuario.Senha))
         {
             _logger.LogWarning("Tentativa de login com senha incorreta: {Email}", request.Email);
             throw new InvalidOperationException("Email ou senha inválidos");
@@ -175,7 +175,7 @@ public class AuthService : IAuthService
             throw new InvalidOperationException("Usuário não encontrado");
 
         // Verificar senha atual
-        if (!VerificarSenha(request.SenhaAtual, usuario.SenhaHash))
+        if (!VerificarSenha(request.SenhaAtual, usuario.Senha))
             throw new InvalidOperationException("Senha atual inválida");
 
         // Atualizar senha

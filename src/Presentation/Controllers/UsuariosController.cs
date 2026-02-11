@@ -84,7 +84,7 @@ namespace MenuAdminAPI.Presentation.Controllers
                     Id = Guid.NewGuid(),
                     Nome = request.Nome,
                     Email = request.Email,
-                    SenhaHash = senhaHash,
+                    Senha = senhaHash,
                     Perfil = request.Perfil ?? "operador",
                     EstabelecimentoId = request.EstabelecimentoId,
                     Ativo = true,
@@ -146,7 +146,7 @@ namespace MenuAdminAPI.Presentation.Controllers
                     usuario.Perfil = request.Perfil;
 
                 if (!string.IsNullOrWhiteSpace(request.SenhaHash))
-                    usuario.SenhaHash = HashSenha(request.SenhaHash);
+                    usuario.Senha = HashSenha(request.SenhaHash);
 
                 if (request.Ativo.HasValue)
                     usuario.Ativo = request.Ativo.Value;
