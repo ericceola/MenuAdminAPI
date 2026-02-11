@@ -48,22 +48,35 @@ namespace MenuAdminAPI.Presentation.Controllers
             }
         }
 
-        /// <summary>
-        /// Cria um novo usuário e envia e-mail com credenciais
-        /// </summary>
-        [HttpPost]
-        public async Task<IActionResult> Criar([FromBody] CriarUsuarioRequest request)
+    /// <summary>
+    /// Cria um novo usuário e envia e-mail com credenciais
+    /// </summary>
+    [HttpPost]
+    public async Task<IActionResult> Criar([FromBody] CriarUsuarioRequest request)
+    {
+        try
         {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(request.Nome) || 
-                    string.IsNullOrWhiteSpace(request.Email) || 
-                    request.EstabelecimentoId == Guid.Empty)
-                    return BadRequest("Nome, email e estabelecimento são obrigatórios");
+            if (string.IsNullOrWhiteSpace(request.Nome) || 
+                string.IsNullOrWhiteSpace(request.Email) || 
+                request.EstabelecimentoId == Guid.Empty)
+                return BadRequest("Nome, email e estabelecimento são obrigatórios");
 
+            // Usar senha fornecida ou gerar temporária
+            string senhaTemporaria;
+            string senhaHash;
+            
+            if (!string.IsNullOrWhiteSpace(request.SenhaHash))
+            {
+                // Usar senha fornecida
+                senhaTemporaria = request.SenhaHash;
+                senhaHash = HashSenha(senhaTemporaria);
+            }
+            else
+            {
                 // Gerar senha temporária
-                var senhaTemporaria = GerarSenhaTemporaria();
-                var senhaHash = HashSenha(senhaTemporaria);
+                senhaTemporaria = GerarSenhaTemporaria();
+                senhaHash = HashSenha(senhaTemporaria);
+            }
 
                 // Criar usuário
                 var usuario = new Usuario
@@ -126,8 +139,14 @@ namespace MenuAdminAPI.Presentation.Controllers
                 if (!string.IsNullOrWhiteSpace(request.Nome))
                     usuario.Nome = request.Nome;
 
+                if (!string.IsNullOrWhiteSpace(request.Email))
+                    usuario.Email = request.Email;
+
                 if (!string.IsNullOrWhiteSpace(request.Perfil))
                     usuario.Perfil = request.Perfil;
+
+                if (!string.IsNullOrWhiteSpace(request.SenhaHash))
+                    usuario.SenhaHash = HashSenha(request.SenhaHash);
 
                 if (request.Ativo.HasValue)
                     usuario.Ativo = request.Ativo.Value;
@@ -211,6 +230,7 @@ namespace MenuAdminAPI.Presentation.Controllers
         public string? Nome { get; set; }
         public string? Email { get; set; }
         public string? Perfil { get; set; }
+        public string? SenhaHash { get; set; }
         public Guid EstabelecimentoId { get; set; }
     }
 
@@ -220,7 +240,9 @@ namespace MenuAdminAPI.Presentation.Controllers
     public class AtualizarUsuarioRequest
     {
         public string? Nome { get; set; }
+        public string? Email { get; set; }
         public string? Perfil { get; set; }
+        public string? SenhaHash { get; set; }
         public bool? Ativo { get; set; }
     }
 }
