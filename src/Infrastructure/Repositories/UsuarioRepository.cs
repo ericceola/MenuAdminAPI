@@ -37,7 +37,7 @@ public class UsuarioRepository : RepositoryBase<Usuario>, IUsuarioRepository
     public async Task<IEnumerable<Usuario>> ObterPorEstabelecimentoAsync(Guid estabelecimentoId)
     {
         const string sql = @"
-            SELECT Id, EstabelecimentoId, Nome, Email, Senha AS SenhaHash, Perfil, Status, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, EstabelecimentoId, Nome, Email, Senha, Perfil, Status, Ativo, DataCriacao, DataAtualizacao
             FROM Usuarios
             WHERE EstabelecimentoId = @EstabelecimentoId AND Ativo = 1
             ORDER BY Nome";
@@ -51,7 +51,7 @@ public class UsuarioRepository : RepositoryBase<Usuario>, IUsuarioRepository
     public async Task<IEnumerable<Usuario>> ObterAtivosPorEstabelecimentoAsync(Guid estabelecimentoId)
     {
         const string sql = @"
-            SELECT Id, EstabelecimentoId, Nome, Email, Senha AS SenhaHash, Perfil, Status, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, EstabelecimentoId, Nome, Email, Senha, Perfil, Status, Ativo, DataCriacao, DataAtualizacao
             FROM Usuarios
             WHERE EstabelecimentoId = @EstabelecimentoId AND Ativo = 1 AND Status = 0
             ORDER BY Nome";
@@ -68,7 +68,7 @@ public class UsuarioRepository : RepositoryBase<Usuario>, IUsuarioRepository
             return Enumerable.Empty<Usuario>();
 
         const string sql = @"
-            SELECT Id, EstabelecimentoId, Nome, Email, Senha AS SenhaHash, Perfil, Status, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, EstabelecimentoId, Nome, Email, Senha, Perfil, Status, Ativo, DataCriacao, DataAtualizacao
             FROM Usuarios
             WHERE Ativo = 1 AND (Nome LIKE @Termo OR Email LIKE @Termo)
             ORDER BY Nome";
