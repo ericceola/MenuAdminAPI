@@ -23,10 +23,17 @@ public static class MappingProfile
             estabelecimento.Cidade,
             estabelecimento.Estado,
             estabelecimento.CEP,
+            estabelecimento.RazaoSocial,
+            estabelecimento.NomeResponsavel,
+            estabelecimento.TelefoneResponsavel,
+            estabelecimento.EhMatriz,
+            estabelecimento.TemFiliais,
+            estabelecimento.MatrizId,
             estabelecimento.Plano,
             estabelecimento.Ativo,
             estabelecimento.DataCriacao,
-            estabelecimento.DataAtualizacao
+            estabelecimento.DataAtualizacao,
+            estabelecimento.Filiais?.Select(f => f.ToResponse()).ToList()
         );
 
     public static Estabelecimento ToEntity(this CriarEstabelecimentoRequest request)
@@ -44,6 +51,36 @@ public static class MappingProfile
             Cidade = request.Cidade,
             Estado = request.Estado,
             CEP = request.CEP,
+            RazaoSocial = request.RazaoSocial,
+            NomeResponsavel = request.NomeResponsavel,
+            TelefoneResponsavel = request.TelefoneResponsavel,
+            EhMatriz = request.EhMatriz,
+            TemFiliais = request.TemFiliais,
+            MatrizId = request.MatrizId,
+            Plano = request.Plano
+        };
+
+    public static Estabelecimento ToEntity(this AtualizarEstabelecimentoRequest request, Guid id)
+        => new()
+        {
+            Id = id,
+            Nome = request.Nome,
+            Email = request.Email,
+            Telefone = request.Telefone,
+            CNPJ = request.CNPJ,
+            Endereco = request.Endereco,
+            Numero = request.Numero,
+            Complemento = request.Complemento,
+            Bairro = request.Bairro,
+            Cidade = request.Cidade,
+            Estado = request.Estado,
+            CEP = request.CEP,
+            RazaoSocial = request.RazaoSocial,
+            NomeResponsavel = request.NomeResponsavel,
+            TelefoneResponsavel = request.TelefoneResponsavel,
+            EhMatriz = request.EhMatriz,
+            TemFiliais = request.TemFiliais,
+            MatrizId = request.MatrizId,
             Plano = request.Plano
         };
 

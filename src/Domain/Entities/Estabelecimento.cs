@@ -17,12 +17,20 @@ public class Estabelecimento
     public string Cidade { get; set; } = string.Empty;
     public string Estado { get; set; } = string.Empty;
     public string CEP { get; set; } = string.Empty;
+    public string RazaoSocial { get; set; } = string.Empty;
+    public string NomeResponsavel { get; set; } = string.Empty;
+    public string TelefoneResponsavel { get; set; } = string.Empty;
+    public bool EhMatriz { get; set; } = false;
+    public bool TemFiliais { get; set; } = false;
+    public Guid? MatrizId { get; set; } // ID da matriz se for filial
     public string Plano { get; set; } = "Básico";
     public bool Ativo { get; set; } = true;
     public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
     public DateTime DataAtualizacao { get; set; } = DateTime.UtcNow;
 
     // Relacionamentos
+    public Estabelecimento? Matriz { get; set; } // Referência à matriz
+    public ICollection<Estabelecimento> Filiais { get; set; } = new List<Estabelecimento>(); // Filiais deste estabelecimento
     public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
     public ICollection<Categoria> Categorias { get; set; } = new List<Categoria>();
     public ICollection<Cliente> Clientes { get; set; } = new List<Cliente>();
