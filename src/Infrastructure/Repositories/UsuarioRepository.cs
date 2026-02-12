@@ -24,7 +24,7 @@ public class UsuarioRepository : RepositoryBase<Usuario>, IUsuarioRepository
             return null;
 
         const string sql = @"
-            SELECT Id, EstabelecimentoId, Nome, Email, Senha AS SenhaHash, Perfil, Status, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, EstabelecimentoId, Nome, Email, Senha, Perfil, Status, Ativo, DataCriacao, DataAtualizacao
             FROM Usuarios
             WHERE Email = @Email AND Ativo = 1";
 
