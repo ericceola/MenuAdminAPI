@@ -165,4 +165,35 @@ public class UsuarioRepository : RepositoryBase<Usuario>, IUsuarioRepository
         const string sql = "SELECT COUNT(*) FROM Usuarios WHERE Ativo = 1";
         return await _connection.QueryFirstAsync<int>(sql);
     }
+
+    /// <summary>
+    /// Atualizar usuário - override para atualizar apenas colunas válidas
+    /// </summary>
+    public override async Task AtualizarAsync(Usuario usuario)
+    {
+        if (usuario == null)
+            throw new ArgumentNullException(nameof(usuario));
+
+        const string sql = @"
+            UPDATE Usuarios
+            SET EstabelecimentoId = @EstabelecimentoId,
+                Nome = @Nome,
+                Email = @Email,
+                Senha = @Senha,
+                Perfil = @Perfil,
+                Ativo = @Ativo,
+                DataAtualizacao = GETUTCDATE()
+            WHERE Id = @Id";
+
+        await _connection.ExecuteAsync(sql, new
+        {
+            Id = usuario.Id,
+            EstabelecimentoId = usuario.EstabelecimentoId,
+            Nome = usuario.Nome,
+            Email = usuario.Email,
+            Senha = usuario.Senha,
+            Perfil = usuario.Perfil,
+            Ativo = usuario.Ativo
+        });
+    }
 }
