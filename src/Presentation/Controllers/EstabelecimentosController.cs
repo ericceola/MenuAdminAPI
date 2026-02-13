@@ -81,17 +81,25 @@ public class EstabelecimentosController : BaseController
         if (!ModelState.IsValid)
             return BadRequestResponse("Dados inválidos", ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)));
 
-        if (await _unitOfWork.Estabelecimentos.EmailJaExisteAsync(request.Email))
-            return ConflictResponse("Email já existe");
-
-        if (await _unitOfWork.Estabelecimentos.CnpjJaExisteAsync(request.CNPJ))
-            return ConflictResponse("CNPJ já existe");
-
         var estabelecimento = request.ToEntity();
 
         try
         {
+            // Validações DENTRO da transação
             await _unitOfWork.BeginTransactionAsync();
+            
+            if (await _unitOfWork.Estabelecimentos.EmailJaExisteAsync(request.Email))
+            {
+                await _unitOfWork.RollbackAsync();
+                return ConflictResponse("Email já existe");
+            }
+
+            if (await _unitOfWork.Estabelecimentos.CnpjJaExisteAsync(request.CNPJ))
+            {
+                await _unitOfWork.RollbackAsync();
+                return ConflictResponse("CNPJ já existe");
+            }
+            
             await _unitOfWork.Estabelecimentos.AdicionarAsync(estabelecimento);
             await _unitOfWork.CommitAsync();
 
