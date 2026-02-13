@@ -1,5 +1,6 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
+using MenuAdminAPI.Domain.Entities;
 using MenuAdminAPI.Domain.Repositories;
 using MenuAdminAPI.Infrastructure.Repositories;
 
