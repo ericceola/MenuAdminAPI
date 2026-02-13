@@ -13,14 +13,8 @@ public class Estabelecimento
     public string Telefone { get; set; } = string.Empty;
     public string CNPJ { get; set; } = string.Empty;
     public string Endereco { get; set; } = string.Empty;
-    
-    [NotMapped]
     public string Numero { get; set; } = string.Empty;
-    
-    [NotMapped]
     public string Complemento { get; set; } = string.Empty;
-    
-    [NotMapped]
     public string Bairro { get; set; } = string.Empty;
     public string Cidade { get; set; } = string.Empty;
     public string Estado { get; set; } = string.Empty;
