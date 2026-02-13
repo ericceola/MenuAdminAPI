@@ -121,6 +121,36 @@ public class UnitOfWork : IUnitOfWork, IDisposable
 
         var connection = GetConnection() as SqlConnection;
         _transaction = connection?.BeginTransaction();
+        
+        // Propagar transação a todos os repositórios
+        PropagateTransactionToRepositories();
+    }
+    
+    /// <summary>
+    /// Propagar transação para todos os repositórios
+    /// </summary>
+    private void PropagateTransactionToRepositories()
+    {
+        if (_estabelecimentos is RepositoryBase<Estabelecimento> repo)
+            repo.SetTransaction(_transaction);
+        if (_produtos is RepositoryBase<Produto> repoProd)
+            repoProd.SetTransaction(_transaction);
+        if (_categorias is RepositoryBase<Categoria> repoCat)
+            repoCat.SetTransaction(_transaction);
+        if (_subcategorias is RepositoryBase<Subcategoria> repoSubcat)
+            repoSubcat.SetTransaction(_transaction);
+        if (_clientes is RepositoryBase<Cliente> repoCli)
+            repoCli.SetTransaction(_transaction);
+        if (_pedidos is RepositoryBase<Pedido> repoPed)
+            repoPed.SetTransaction(_transaction);
+        if (_usuarios is RepositoryBase<Usuario> repoUsu)
+            repoUsu.SetTransaction(_transaction);
+        if (_variantes is RepositoryBase<Variante> repoVar)
+            repoVar.SetTransaction(_transaction);
+        if (_adicionais is RepositoryBase<Adicional> repoAdi)
+            repoAdi.SetTransaction(_transaction);
+        if (_enderecos is RepositoryBase<Endereco> repoEnd)
+            repoEnd.SetTransaction(_transaction);
     }
 
     /// <summary>
@@ -141,9 +171,37 @@ public class UnitOfWork : IUnitOfWork, IDisposable
         }
         finally
         {
+            ClearTransactionFromRepositories();
             _transaction?.Dispose();
             _transaction = null;
         }
+    }
+    
+    /// <summary>
+    /// Limpar transação de todos os repositórios
+    /// </summary>
+    private void ClearTransactionFromRepositories()
+    {
+        if (_estabelecimentos is RepositoryBase<Estabelecimento> repo)
+            repo.SetTransaction(null);
+        if (_produtos is RepositoryBase<Produto> repoProd)
+            repoProd.SetTransaction(null);
+        if (_categorias is RepositoryBase<Categoria> repoCat)
+            repoCat.SetTransaction(null);
+        if (_subcategorias is RepositoryBase<Subcategoria> repoSubcat)
+            repoSubcat.SetTransaction(null);
+        if (_clientes is RepositoryBase<Cliente> repoCli)
+            repoCli.SetTransaction(null);
+        if (_pedidos is RepositoryBase<Pedido> repoPed)
+            repoPed.SetTransaction(null);
+        if (_usuarios is RepositoryBase<Usuario> repoUsu)
+            repoUsu.SetTransaction(null);
+        if (_variantes is RepositoryBase<Variante> repoVar)
+            repoVar.SetTransaction(null);
+        if (_adicionais is RepositoryBase<Adicional> repoAdi)
+            repoAdi.SetTransaction(null);
+        if (_enderecos is RepositoryBase<Endereco> repoEnd)
+            repoEnd.SetTransaction(null);
     }
 
     /// <summary>
@@ -159,6 +217,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
         }
         finally
         {
+            ClearTransactionFromRepositories();
             _transaction?.Dispose();
             _transaction = null;
         }
