@@ -36,62 +36,173 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     /// <summary>
     /// Repositório de Estabelecimentos
     /// </summary>
-    public IEstabelecimentoRepository Estabelecimentos =>
-        _estabelecimentos ??= new EstabelecimentoRepository(GetConnection());
+    public IEstabelecimentoRepository Estabelecimentos
+    {
+        get
+        {
+            if (_estabelecimentos == null)
+                _estabelecimentos = new EstabelecimentoRepository(GetConnection());
+            
+            // Sempre propagar transação ao acessar repositório
+            if (_estabelecimentos is RepositoryBase<Estabelecimento> repo)
+                repo.SetTransaction(_transaction);
+            
+            return _estabelecimentos;
+        }
+    }
 
     /// <summary>
     /// Repositório de Produtos
     /// </summary>
-    public IProdutoRepository Produtos =>
-        _produtos ??= new ProdutoRepository(GetConnection());
+    public IProdutoRepository Produtos
+    {
+        get
+        {
+            if (_produtos == null)
+                _produtos = new ProdutoRepository(GetConnection());
+            
+            if (_produtos is RepositoryBase<Produto> repo)
+                repo.SetTransaction(_transaction);
+            
+            return _produtos;
+        }
+    }
 
     /// <summary>
     /// Repositório de Categorias
     /// </summary>
-    public ICategoriaRepository Categorias =>
-        _categorias ??= new CategoriaRepository(GetConnection());
+    public ICategoriaRepository Categorias
+    {
+        get
+        {
+            if (_categorias == null)
+                _categorias = new CategoriaRepository(GetConnection());
+            
+            if (_categorias is RepositoryBase<Categoria> repo)
+                repo.SetTransaction(_transaction);
+            
+            return _categorias;
+        }
+    }
 
     /// <summary>
     /// Repositório de Subcategorias
     /// </summary>
-    public ISubcategoriaRepository Subcategorias =>
-        _subcategorias ??= new SubcategoriaRepository(GetConnection());
+    public ISubcategoriaRepository Subcategorias
+    {
+        get
+        {
+            if (_subcategorias == null)
+                _subcategorias = new SubcategoriaRepository(GetConnection());
+            
+            if (_subcategorias is RepositoryBase<Subcategoria> repo)
+                repo.SetTransaction(_transaction);
+            
+            return _subcategorias;
+        }
+    }
 
     /// <summary>
     /// Repositório de Clientes
     /// </summary>
-    public IClienteRepository Clientes =>
-        _clientes ??= new ClienteRepository(GetConnection());
+    public IClienteRepository Clientes
+    {
+        get
+        {
+            if (_clientes == null)
+                _clientes = new ClienteRepository(GetConnection());
+            
+            if (_clientes is RepositoryBase<Cliente> repo)
+                repo.SetTransaction(_transaction);
+            
+            return _clientes;
+        }
+    }
 
     /// <summary>
     /// Repositório de Pedidos
     /// </summary>
-    public IPedidoRepository Pedidos =>
-        _pedidos ??= new PedidoRepository(GetConnection());
+    public IPedidoRepository Pedidos
+    {
+        get
+        {
+            if (_pedidos == null)
+                _pedidos = new PedidoRepository(GetConnection());
+            
+            if (_pedidos is RepositoryBase<Pedido> repo)
+                repo.SetTransaction(_transaction);
+            
+            return _pedidos;
+        }
+    }
 
     /// <summary>
     /// Repositório de Usuários
     /// </summary>
-    public IUsuarioRepository Usuarios =>
-        _usuarios ??= new UsuarioRepository(GetConnection());
+    public IUsuarioRepository Usuarios
+    {
+        get
+        {
+            if (_usuarios == null)
+                _usuarios = new UsuarioRepository(GetConnection());
+            
+            if (_usuarios is RepositoryBase<Usuario> repo)
+                repo.SetTransaction(_transaction);
+            
+            return _usuarios;
+        }
+    }
 
     /// <summary>
     /// Repositório de Variantes
     /// </summary>
-    public IVarianteRepository Variantes =>
-        _variantes ??= new VarianteRepository(GetConnection());
+    public IVarianteRepository Variantes
+    {
+        get
+        {
+            if (_variantes == null)
+                _variantes = new VarianteRepository(GetConnection());
+            
+            if (_variantes is RepositoryBase<Variante> repo)
+                repo.SetTransaction(_transaction);
+            
+            return _variantes;
+        }
+    }
 
     /// <summary>
     /// Repositório de Adicionais
     /// </summary>
-    public IAdicionalRepository Adicionais =>
-        _adicionais ??= new AdicionalRepository(GetConnection());
+    public IAdicionalRepository Adicionais
+    {
+        get
+        {
+            if (_adicionais == null)
+                _adicionais = new AdicionalRepository(GetConnection());
+            
+            if (_adicionais is RepositoryBase<Adicional> repo)
+                repo.SetTransaction(_transaction);
+            
+            return _adicionais;
+        }
+    }
 
     /// <summary>
     /// Repositório de Endereços
     /// </summary>
-    public IEnderecoRepository Enderecos =>
-        _enderecos ??= new EnderecoRepository(GetConnection());
+    public IEnderecoRepository Enderecos
+    {
+        get
+        {
+            if (_enderecos == null)
+                _enderecos = new EnderecoRepository(GetConnection());
+            
+            if (_enderecos is RepositoryBase<Endereco> repo)
+                repo.SetTransaction(_transaction);
+            
+            return _enderecos;
+        }
+    }
 
     /// <summary>
     /// Obter ou criar conexão
