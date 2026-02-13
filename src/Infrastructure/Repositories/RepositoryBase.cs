@@ -11,11 +11,20 @@ public abstract class RepositoryBase<T> where T : class
 {
     protected readonly IDbConnection _connection;
     protected readonly string _tableName;
+    protected IDbTransaction? _transaction;
 
     protected RepositoryBase(IDbConnection connection, string tableName)
     {
         _connection = connection ?? throw new ArgumentNullException(nameof(connection));
         _tableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
+    }
+
+    /// <summary>
+    /// Definir transação para operações
+    /// </summary>
+    public void SetTransaction(IDbTransaction? transaction)
+    {
+        _transaction = transaction;
     }
 
     /// <summary>
@@ -26,7 +35,7 @@ public abstract class RepositoryBase<T> where T : class
         const string sql = "SELECT * FROM {0} WHERE Id = @Id";
         var query = string.Format(sql, _tableName);
         
-        return await _connection.QueryFirstOrDefaultAsync<T>(query, new { Id = id });
+        return await _connection.QueryFirstOrDefaultAsync<T>(query, new { Id = id }, transaction: _transaction);
     }
 
     /// <summary>
@@ -35,7 +44,7 @@ public abstract class RepositoryBase<T> where T : class
     public virtual async Task<IEnumerable<T>> ObterTodosAsync()
     {
         var sql = $"SELECT * FROM {_tableName}";
-        return await _connection.QueryAsync<T>(sql);
+        return await _connection.QueryAsync<T>(sql, transaction: _transaction);
     }
 
     /// <summary>
@@ -57,7 +66,7 @@ public abstract class RepositoryBase<T> where T : class
 
         var parametrosDict = propriedades.ToDictionary(p => p.Name, p => p.GetValue(entidade));
         
-        await _connection.ExecuteAsync(sql, parametrosDict);
+        await _connection.ExecuteAsync(sql, parametrosDict, transaction: _transaction);
     }
 
     /// <summary>
@@ -78,7 +87,7 @@ public abstract class RepositoryBase<T> where T : class
         var parametrosDict = propriedades.ToDictionary(p => p.Name, p => p.GetValue(entidade));
         parametrosDict["Id"] = typeof(T).GetProperty("Id")?.GetValue(entidade);
 
-        await _connection.ExecuteAsync(sql, parametrosDict);
+        await _connection.ExecuteAsync(sql, parametrosDict, transaction: _transaction);
     }
 
     /// <summary>
@@ -87,7 +96,7 @@ public abstract class RepositoryBase<T> where T : class
     public virtual async Task RemoverAsync(Guid id)
     {
         var sql = $"DELETE FROM {_tableName} WHERE Id = @Id";
-        await _connection.ExecuteAsync(sql, new { Id = id });
+        await _connection.ExecuteAsync(sql, new { Id = id }, transaction: _transaction);
     }
 
     /// <summary>
@@ -96,7 +105,7 @@ public abstract class RepositoryBase<T> where T : class
     public virtual async Task<int> ContarAsync()
     {
         var sql = $"SELECT COUNT(*) FROM {_tableName}";
-        return await _connection.QueryFirstAsync<int>(sql);
+        return await _connection.QueryFirstAsync<int>(sql, transaction: _transaction);
     }
 
     /// <summary>
@@ -105,7 +114,7 @@ public abstract class RepositoryBase<T> where T : class
     public virtual async Task<bool> ExisteAsync(Guid id)
     {
         var sql = $"SELECT COUNT(*) FROM {_tableName} WHERE Id = @Id";
-        var count = await _connection.QueryFirstAsync<int>(sql, new { Id = id });
+        var count = await _connection.QueryFirstAsync<int>(sql, new { Id = id }, transaction: _transaction);
         return count > 0;
     }
 
@@ -120,10 +129,10 @@ public abstract class RepositoryBase<T> where T : class
         var offset = (pagina - 1) * tamanho;
 
         var sqlTotal = $"SELECT COUNT(*) FROM {_tableName}";
-        var total = await _connection.QueryFirstAsync<int>(sqlTotal);
+        var total = await _connection.QueryFirstAsync<int>(sqlTotal, transaction: _transaction);
 
         var sql = $"SELECT * FROM {_tableName} ORDER BY Id OFFSET {offset} ROWS FETCH NEXT {tamanho} ROWS ONLY";
-        var itens = await _connection.QueryAsync<T>(sql);
+        var itens = await _connection.QueryAsync<T>(sql, transaction: _transaction);
 
         return (itens, total);
     }
