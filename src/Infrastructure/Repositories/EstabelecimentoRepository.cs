@@ -26,7 +26,7 @@ public class EstabelecimentoRepository : RepositoryBase<Estabelecimento>, IEstab
             WHERE Ativo = 1
             ORDER BY Nome";
 
-        return await _connection.QueryAsync<Estabelecimento>(sql, transaction: _transaction);
+        return await _connection.QueryAsync<Estabelecimento>(sql);
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ public class EstabelecimentoRepository : RepositoryBase<Estabelecimento>, IEstab
             WHERE Plano = @Plano AND Ativo = 1
             ORDER BY Nome";
 
-        return await _connection.QueryAsync<Estabelecimento>(sql, new { Plano = plano }, transaction: _transaction);
+        return await _connection.QueryAsync<Estabelecimento>(sql, new { Plano = plano });
     }
 
     /// <summary>
@@ -58,7 +58,7 @@ public class EstabelecimentoRepository : RepositoryBase<Estabelecimento>, IEstab
             ORDER BY Nome";
 
         var termoLike = $"%{termo}%";
-        return await _connection.QueryAsync<Estabelecimento>(sql, new { Termo = termoLike }, transaction: _transaction);
+        return await _connection.QueryAsync<Estabelecimento>(sql, new { Termo = termoLike });
     }
 
     /// <summary>
@@ -73,7 +73,7 @@ public class EstabelecimentoRepository : RepositoryBase<Estabelecimento>, IEstab
             SELECT COUNT(*) FROM Estabelecimentos
             WHERE Email = @Email AND (@IdExcluir IS NULL OR Id != @IdExcluir)";
 
-        var count = await _connection.QueryFirstAsync<int>(sql, new { Email = email, IdExcluir = idExcluir }, transaction: _transaction);
+        var count = await _connection.QueryFirstAsync<int>(sql, new { Email = email, IdExcluir = idExcluir });
         return count > 0;
     }
 
@@ -89,7 +89,7 @@ public class EstabelecimentoRepository : RepositoryBase<Estabelecimento>, IEstab
             SELECT COUNT(*) FROM Estabelecimentos
             WHERE CNPJ = @Cnpj AND (@IdExcluir IS NULL OR Id != @IdExcluir)";
 
-        var count = await _connection.QueryFirstAsync<int>(sql, new { Cnpj = cnpj, IdExcluir = idExcluir }, transaction: _transaction);
+        var count = await _connection.QueryFirstAsync<int>(sql, new { Cnpj = cnpj, IdExcluir = idExcluir });
         return count > 0;
     }
 
@@ -109,7 +109,7 @@ public class EstabelecimentoRepository : RepositoryBase<Estabelecimento>, IEstab
                 (SELECT COUNT(*) FROM Pedidos WHERE EstabelecimentoId = @EstabelecimentoId) AS TotalPedidos,
                 (SELECT ISNULL(SUM(ValorFinal), 0) FROM Pedidos WHERE EstabelecimentoId = @EstabelecimentoId AND Status IN (1, 2, 3)) AS ReceitaTotal";
 
-        return await _connection.QueryFirstAsync<EstabelecimentoEstatisticas>(sql, new { EstabelecimentoId = estabelecimentoId }, transaction: _transaction);
+        return await _connection.QueryFirstAsync<EstabelecimentoEstatisticas>(sql, new { EstabelecimentoId = estabelecimentoId });
     }
 
     /// <summary>
@@ -122,7 +122,7 @@ public class EstabelecimentoRepository : RepositoryBase<Estabelecimento>, IEstab
             SET Ativo = 1, DataAtualizacao = GETUTCDATE()
             WHERE Id = @Id";
 
-        await _connection.ExecuteAsync(sql, new { Id = id }, transaction: _transaction);
+        await _connection.ExecuteAsync(sql, new { Id = id });
     }
 
     /// <summary>
@@ -135,7 +135,7 @@ public class EstabelecimentoRepository : RepositoryBase<Estabelecimento>, IEstab
             SET Ativo = 0, DataAtualizacao = GETUTCDATE()
             WHERE Id = @Id";
 
-        await _connection.ExecuteAsync(sql, new { Id = id }, transaction: _transaction);
+        await _connection.ExecuteAsync(sql, new { Id = id });
     }
 
     /// <summary>
@@ -144,7 +144,7 @@ public class EstabelecimentoRepository : RepositoryBase<Estabelecimento>, IEstab
     public async Task<int> ContarAtivosAsync()
     {
         const string sql = "SELECT COUNT(*) FROM Estabelecimentos WHERE Ativo = 1";
-        return await _connection.QueryFirstAsync<int>(sql, transaction: _transaction);
+        return await _connection.QueryFirstAsync<int>(sql);
     }
 }
 
