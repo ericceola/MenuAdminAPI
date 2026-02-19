@@ -23,5 +23,4 @@ public interface IEstabelecimentoRepository
     Task AtivarAsync(Guid id);
     Task DesativarAsync(Guid id);
     Task<IEnumerable<Estabelecimento>> ObterComHierarquiaAsync();
-    Task<EstabelecimentoEstatisticas> ObterEstatisticasAsync(Guid estabelecimentoId);
 }
