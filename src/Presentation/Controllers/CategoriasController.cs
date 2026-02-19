@@ -23,6 +23,27 @@ public class CategoriasController : BaseController
     }
 
     /// <summary>
+    /// Listar todas as categorias
+    /// </summary>
+    [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<CategoriaResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> ObterTodas()
+    {
+        try
+        {
+            _logger.LogInformation("Listando todas as categorias");
+            
+            // TODO: Implementar chamada ao service
+            return OkResponse(Enumerable.Empty<CategoriaResponse>());
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao listar categorias");
+            return InternalErrorResponse();
+        }
+    }
+
+    /// <summary>
     /// Obter categoria por ID
     /// </summary>
     [HttpGet("{id}")]
