@@ -7,8 +7,8 @@ public interface IProdutoService
 {
     Task<IEnumerable<ProdutoResponse>> ObterTodosAsync();
     Task<ProdutoResponse?> ObterPorIdAsync(Guid id);
-    Task<ProdutoResponse> CriarAsync(CreateProdutoRequest request);
-    Task<ProdutoResponse> AtualizarAsync(Guid id, UpdateProdutoRequest request);
+    Task<ProdutoResponse> CriarAsync(CriarProdutoRequest request);
+    Task<ProdutoResponse> AtualizarAsync(Guid id, AtualizarProdutoRequest request);
     Task DeletarAsync(Guid id);
 }
 
@@ -33,13 +33,13 @@ public class ProdutoService : IProdutoService
         return null;
     }
 
-    public async Task<ProdutoResponse> CriarAsync(CreateProdutoRequest request)
+    public async Task<ProdutoResponse> CriarAsync(CriarProdutoRequest request)
     {
         // TODO: Implementar criação de produto
         throw new NotImplementedException();
     }
 
-    public async Task<ProdutoResponse> AtualizarAsync(Guid id, UpdateProdutoRequest request)
+    public async Task<ProdutoResponse> AtualizarAsync(Guid id, AtualizarProdutoRequest request)
     {
         // TODO: Implementar atualização de produto
         throw new NotImplementedException();
