@@ -29,20 +29,19 @@ public class SubcategoriasController : BaseController
     [ProducesResponseType(typeof(SubcategoriaResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ObterPorId(Guid id)
-    {
-        try
         {
-            _logger.LogInformation("Obtendo subcategoria {SubcategoriaId}", id);
-            
-            // TODO: Implementar chamada ao service
-            return OkResponse(new SubcategoriaResponse());
+            try
+            {
+                _logger.LogInformation("Obtendo subcategoria {SubcategoriaId}", id);
+                var subcategoria = await _subcategoriaService.ObterPorIdAsync(id);
+                return OkResponse(subcategoria);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao obter subcategoria {SubcategoriaId}", id);
+                return InternalErrorResponse();
+            }
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao obter subcategoria {SubcategoriaId}", id);
-            return InternalErrorResponse();
-        }
-    }
 
     /// <summary>
     /// Listar subcategorias por categoria
@@ -50,20 +49,19 @@ public class SubcategoriasController : BaseController
     [HttpGet("categoria/{categoriaId}")]
     [ProducesResponseType(typeof(IEnumerable<SubcategoriaResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> ObterPorCategoria(Guid categoriaId)
-    {
-        try
         {
-            _logger.LogInformation("Listando subcategorias da categoria {CategoriaId}", categoriaId);
-            
-            // TODO: Implementar chamada ao service
-            return OkResponse(Enumerable.Empty<SubcategoriaResponse>());
+            try
+            {
+                _logger.LogInformation("Listando subcategorias da categoria {CategoriaId}", categoriaId);
+                var subcategorias = await _subcategoriaService.ObterPorCategoriaAsync(categoriaId);
+                return OkResponse(subcategorias);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao listar subcategorias da categoria {CategoriaId}", categoriaId);
+                return InternalErrorResponse();
+            }
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao listar subcategorias da categoria {CategoriaId}", categoriaId);
-            return InternalErrorResponse();
-        }
-    }
 
     /// <summary>
     /// Listar apenas subcategorias ativas por categoria
@@ -71,20 +69,19 @@ public class SubcategoriasController : BaseController
     [HttpGet("categoria/{categoriaId}/ativas")]
     [ProducesResponseType(typeof(IEnumerable<SubcategoriaResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> ObterAtivasPorCategoria(Guid categoriaId)
-    {
-        try
         {
-            _logger.LogInformation("Listando subcategorias ativas da categoria {CategoriaId}", categoriaId);
-            
-            // TODO: Implementar chamada ao service
-            return OkResponse(Enumerable.Empty<SubcategoriaResponse>());
+            try
+            {
+                _logger.LogInformation("Listando subcategorias ativas da categoria {CategoriaId}", categoriaId);
+                var subcategorias = await _subcategoriaService.ObterAtivasPorCategoriaAsync(categoriaId);
+                return OkResponse(subcategorias);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao listar subcategorias ativas da categoria {CategoriaId}", categoriaId);
+                return InternalErrorResponse();
+            }
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao listar subcategorias ativas da categoria {CategoriaId}", categoriaId);
-            return InternalErrorResponse();
-        }
-    }
 
     /// <summary>
     /// Buscar subcategorias por termo
@@ -142,33 +139,32 @@ public class SubcategoriasController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Criar([FromBody] CriarSubcategoriaRequest request)
-    {
-        try
         {
-            if (!ModelState.IsValid)
-                return BadRequestResponse();
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequestResponse();
 
-            _logger.LogInformation("Criando nova subcategoria: {SubcategoriaNome}", request.Nome);
-            
-            // TODO: Implementar chamada ao service
-            return CreatedResponse(new SubcategoriaResponse());
+                _logger.LogInformation("Criando nova subcategoria: {SubcategoriaNome}", request.Nome);
+                var novaSubcategoria = await _subcategoriaService.CriarAsync(request);
+                return CreatedResponse(novaSubcategoria);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Erro de validação ao criar subcategoria");
+                return BadRequestResponse();
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogWarning(ex, "Conflito ao criar subcategoria");
+                return ConflictResponse();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao criar subcategoria");
+                return InternalErrorResponse();
+            }
         }
-        catch (ArgumentException ex)
-        {
-            _logger.LogWarning(ex, "Erro de validação ao criar subcategoria");
-            return BadRequestResponse();
-        }
-        catch (InvalidOperationException ex)
-        {
-            _logger.LogWarning(ex, "Conflito ao criar subcategoria");
-            return ConflictResponse();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao criar subcategoria");
-            return InternalErrorResponse();
-        }
-    }
 
     /// <summary>
     /// Atualizar subcategoria
@@ -178,33 +174,32 @@ public class SubcategoriasController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Atualizar(Guid id, [FromBody] AtualizarSubcategoriaRequest request)
-    {
-        try
         {
-            if (!ModelState.IsValid)
-                return BadRequestResponse();
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequestResponse();
 
-            _logger.LogInformation("Atualizando subcategoria {SubcategoriaId}", id);
-            
-            // TODO: Implementar chamada ao service
-            return NoContent();
+                _logger.LogInformation("Atualizando subcategoria {SubcategoriaId}", id);
+                await _subcategoriaService.AtualizarAsync(id, request);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Erro de validação ao atualizar subcategoria {SubcategoriaId}", id);
+                return BadRequestResponse();
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogWarning(ex, "Subcategoria {SubcategoriaId} não encontrada", id);
+                return NotFoundResponse();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao atualizar subcategoria {SubcategoriaId}", id);
+                return InternalErrorResponse();
+            }
         }
-        catch (ArgumentException ex)
-        {
-            _logger.LogWarning(ex, "Erro de validação ao atualizar subcategoria {SubcategoriaId}", id);
-            return BadRequestResponse();
-        }
-        catch (InvalidOperationException ex)
-        {
-            _logger.LogWarning(ex, "Subcategoria {SubcategoriaId} não encontrada", id);
-            return NotFoundResponse();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao atualizar subcategoria {SubcategoriaId}", id);
-            return InternalErrorResponse();
-        }
-    }
 
     /// <summary>
     /// Ativar subcategoria
@@ -267,23 +262,22 @@ public class SubcategoriasController : BaseController
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Deletar(Guid id)
-    {
-        try
         {
-            _logger.LogInformation("Deletando subcategoria {SubcategoriaId}", id);
-            
-            // TODO: Implementar chamada ao service
-            return NoContent();
+            try
+            {
+                _logger.LogInformation("Deletando subcategoria {SubcategoriaId}", id);
+                await _subcategoriaService.DeletarAsync(id);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogWarning(ex, "Subcategoria {SubcategoriaId} não encontrada", id);
+                return NotFoundResponse();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao deletar subcategoria {SubcategoriaId}", id);
+                return InternalErrorResponse();
+            }
         }
-        catch (InvalidOperationException ex)
-        {
-            _logger.LogWarning(ex, "Subcategoria {SubcategoriaId} não encontrada", id);
-            return NotFoundResponse();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao deletar subcategoria {SubcategoriaId}", id);
-            return InternalErrorResponse();
-        }
-    }
 }

@@ -32,28 +32,7 @@ public class CategoriasController : BaseController
             try
             {
                 _logger.LogInformation("Listando todas as categorias");
-                
-                var categorias = new List<CategoriaResponse>
-                {
-                    new CategoriaResponse(
-                        Id: Guid.NewGuid(),
-                        EstabelecimentoId: Guid.Empty,
-                        Nome: "Bebidas",
-                        Descricao: "Bebidas diversas",
-                        Ordem: 1,
-                        Ativo: true,
-                        DataCriacao: DateTime.UtcNow
-                    ),
-                    new CategoriaResponse(
-                        Id: Guid.NewGuid(),
-                        EstabelecimentoId: Guid.Empty,
-                        Nome: "Sobremesas",
-                        Descricao: "Sobremesas deliciosas",
-                        Ordem: 2,
-                        Ativo: true,
-                        DataCriacao: DateTime.UtcNow
-                    )
-                };
+                var categorias = await _categoriaService.ObterTodasAsync();
                 return OkResponse(categorias);
             }
             catch (Exception ex)
@@ -62,6 +41,26 @@ public class CategoriasController : BaseController
                 return InternalErrorResponse();
             }
         }
+
+    /// <summary>
+    /// Listar categorias por estabelecimento
+    /// </summary>
+    [HttpGet("estabelecimento/{estabelecimentoId}")]
+    [ProducesResponseType(typeof(IEnumerable<CategoriaResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> ObterPorEstabelecimento(Guid estabelecimentoId)
+    {
+        try
+        {
+            _logger.LogInformation("Listando categorias do estabelecimento {EstabelecimentoId}", estabelecimentoId);
+            var categorias = await _categoriaService.ObterPorEstabelecimentoAsync(estabelecimentoId);
+            return OkResponse(categorias);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao listar categorias do estabelecimento {EstabelecimentoId}", estabelecimentoId);
+            return InternalErrorResponse();
+        }
+    }
 
     /// <summary>
     /// Obter categoria por ID
@@ -166,16 +165,7 @@ public class CategoriasController : BaseController
                     return BadRequestResponse();
 
                 _logger.LogInformation("Criando nova categoria: {CategoriaNome}", request.Nome);
-                
-                var novaCategoria = new CategoriaResponse(
-                    Id: Guid.NewGuid(),
-                    EstabelecimentoId: request.EstabelecimentoId,
-                    Nome: request.Nome,
-                    Descricao: request.Descricao,
-                    Ordem: request.Ordem,
-                    Ativo: true,
-                    DataCriacao: DateTime.UtcNow
-                );
+                var novaCategoria = await _categoriaService.CriarAsync(request);
                 return CreatedResponse(novaCategoria);
             }
             catch (ArgumentException ex)
@@ -210,8 +200,7 @@ public class CategoriasController : BaseController
                     return BadRequestResponse();
 
                 _logger.LogInformation("Atualizando categoria {CategoriaId}", id);
-                
-                // Mock: Simular atualização bem-sucedida
+                await _categoriaService.AtualizarAsync(id, request);
                 return NoContent();
             }
             catch (ArgumentException ex)
@@ -296,8 +285,7 @@ public class CategoriasController : BaseController
             try
             {
                 _logger.LogInformation("Deletando categoria {CategoriaId}", id);
-                
-                // Mock: Simular deleção bem-sucedida
+                await _categoriaService.DeletarAsync(id);
                 return NoContent();
             }
             catch (InvalidOperationException ex)
