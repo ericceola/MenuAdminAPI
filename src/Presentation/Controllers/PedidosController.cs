@@ -23,6 +23,27 @@ public class PedidosController : BaseController
     }
 
     /// <summary>
+    /// Listar todos os pedidos
+    /// </summary>
+    [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<PedidoResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> ObterTodos()
+    {
+        try
+        {
+            _logger.LogInformation("Listando todos os pedidos");
+            
+            // TODO: Implementar chamada ao service
+            return OkResponse(Enumerable.Empty<PedidoResponse>());
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao listar pedidos");
+            return InternalErrorResponse();
+        }
+    }
+
+    /// <summary>
     /// Obter pedido por ID com itens e adicionais
     /// </summary>
     [HttpGet("{id}")]

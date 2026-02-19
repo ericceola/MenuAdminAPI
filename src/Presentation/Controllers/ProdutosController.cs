@@ -23,6 +23,27 @@ public class ProdutosController : BaseController
     }
 
     /// <summary>
+    /// Listar todos os produtos
+    /// </summary>
+    [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<ProdutoResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> ObterTodos()
+    {
+        try
+        {
+            _logger.LogInformation("Listando todos os produtos");
+            
+            // TODO: Implementar chamada ao service
+            return OkResponse(Enumerable.Empty<ProdutoResponse>());
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao listar produtos");
+            return InternalErrorResponse();
+        }
+    }
+
+    /// <summary>
     /// Obter produto por ID com variantes e adicionais
     /// </summary>
     [HttpGet("{id}")]
