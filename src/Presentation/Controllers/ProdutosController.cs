@@ -33,8 +33,8 @@ public class ProdutosController : BaseController
         {
             _logger.LogInformation("Listando todos os produtos");
             
-            // TODO: Implementar chamada ao service
-            return OkResponse(Enumerable.Empty<ProdutoResponse>());
+            var produtos = await _produtoService.ObterTodosAsync();
+            return OkResponse(produtos);
         }
         catch (Exception ex)
         {
