@@ -35,13 +35,13 @@ public class EstabelecimentosController : BaseController
     }
 
     /// <summary>
-    /// Listar todos os estabelecimentos
+    /// Listar todos os estabelecimentos com hierarquia de filiais
     /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<EstabelecimentoResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> ObterTodos()
     {
-        var estabelecimentos = await _unitOfWork.Estabelecimentos.ObterTodosAsync();
+        var estabelecimentos = await _unitOfWork.Estabelecimentos.ObterComHierarquiaAsync();
         return OkResponse(estabelecimentos.Select(e => e.ToResponse()));
     }
 

@@ -146,6 +146,38 @@ public class EstabelecimentoRepository : RepositoryBase<Estabelecimento>, IEstab
         const string sql = "SELECT COUNT(*) FROM Estabelecimentos WHERE Ativo = 1";
         return await _connection.QueryFirstAsync<int>(sql, transaction: _transaction);
     }
+
+    /// <summary>
+    /// Obter estabelecimentos com hierarquia de filiais
+    /// </summary>
+    public async Task<IEnumerable<Estabelecimento>> ObterComHierarquiaAsync()
+    {
+        // Obter todas as matrizes (EhMatriz = true)
+        const string sqlMatrizes = @"
+            SELECT Id, Nome, Email, Telefone, CNPJ, Endereco, Numero, Complemento, Bairro, Cidade, Estado, CEP, 
+                   RazaoSocial, NomeResponsavel, TelefoneResponsavel, Plano, EhMatriz, TemFiliais, MatrizId, Ativo, DataCriacao, DataAtualizacao
+            FROM Estabelecimentos
+            WHERE EhMatriz = 1 AND Ativo = 1
+            ORDER BY Nome";
+
+        var matrizes = (await _connection.QueryAsync<Estabelecimento>(sqlMatrizes, transaction: _transaction)).ToList();
+
+        // Para cada matriz, obter suas filiais
+        const string sqlFiliais = @"
+            SELECT Id, Nome, Email, Telefone, CNPJ, Endereco, Numero, Complemento, Bairro, Cidade, Estado, CEP, 
+                   RazaoSocial, NomeResponsavel, TelefoneResponsavel, Plano, EhMatriz, TemFiliais, MatrizId, Ativo, DataCriacao, DataAtualizacao
+            FROM Estabelecimentos
+            WHERE MatrizId = @MatrizId AND Ativo = 1
+            ORDER BY Nome";
+
+        foreach (var matriz in matrizes)
+        {
+            var filiais = (await _connection.QueryAsync<Estabelecimento>(sqlFiliais, new { MatrizId = matriz.Id }, transaction: _transaction)).ToList();
+            matriz.Filiais = filiais;
+        }
+
+        return matrizes;
+    }
 }
 
 /// <summary>
