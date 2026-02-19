@@ -152,17 +152,17 @@ public class EstabelecimentoRepository : RepositoryBase<Estabelecimento>, IEstab
     /// </summary>
     public async Task<IEnumerable<Estabelecimento>> ObterComHierarquiaAsync()
     {
-        // Obter todas as matrizes (EhMatriz = true)
-        const string sqlMatrizes = @"
+        // Obter todos os estabelecimentos que não são filiais (matrizes e independentes)
+        const string sqlPrincipais = @"
             SELECT Id, Nome, Email, Telefone, CNPJ, Endereco, Numero, Complemento, Bairro, Cidade, Estado, CEP, 
                    RazaoSocial, NomeResponsavel, TelefoneResponsavel, Plano, EhMatriz, TemFiliais, MatrizId, Ativo, DataCriacao, DataAtualizacao
             FROM Estabelecimentos
-            WHERE EhMatriz = 1 AND Ativo = 1
+            WHERE (MatrizId IS NULL OR MatrizId = '00000000-0000-0000-0000-000000000000') AND Ativo = 1
             ORDER BY Nome";
 
-        var matrizes = (await _connection.QueryAsync<Estabelecimento>(sqlMatrizes, transaction: _transaction)).ToList();
+        var estabelecimentosPrincipais = (await _connection.QueryAsync<Estabelecimento>(sqlPrincipais, transaction: _transaction)).ToList();
 
-        // Para cada matriz, obter suas filiais
+        // Para cada estabelecimento que é matriz, obter suas filiais
         const string sqlFiliais = @"
             SELECT Id, Nome, Email, Telefone, CNPJ, Endereco, Numero, Complemento, Bairro, Cidade, Estado, CEP, 
                    RazaoSocial, NomeResponsavel, TelefoneResponsavel, Plano, EhMatriz, TemFiliais, MatrizId, Ativo, DataCriacao, DataAtualizacao
@@ -170,13 +170,17 @@ public class EstabelecimentoRepository : RepositoryBase<Estabelecimento>, IEstab
             WHERE MatrizId = @MatrizId AND Ativo = 1
             ORDER BY Nome";
 
-        foreach (var matriz in matrizes)
+        foreach (var estabelecimento in estabelecimentosPrincipais)
         {
-            var filiais = (await _connection.QueryAsync<Estabelecimento>(sqlFiliais, new { MatrizId = matriz.Id }, transaction: _transaction)).ToList();
-            matriz.Filiais = filiais;
+            // Apenas buscar filiais se for uma matriz
+            if (estabelecimento.EhMatriz)
+            {
+                var filiais = (await _connection.QueryAsync<Estabelecimento>(sqlFiliais, new { MatrizId = estabelecimento.Id }, transaction: _transaction)).ToList();
+                estabelecimento.Filiais = filiais;
+            }
         }
 
-        return matrizes;
+        return estabelecimentosPrincipais;
     }
 }
 
