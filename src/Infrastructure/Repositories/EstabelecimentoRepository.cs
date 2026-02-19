@@ -157,7 +157,7 @@ public class EstabelecimentoRepository : RepositoryBase<Estabelecimento>, IEstab
             SELECT Id, Nome, Email, Telefone, CNPJ, Endereco, Numero, Complemento, Bairro, Cidade, Estado, CEP, 
                    RazaoSocial, NomeResponsavel, TelefoneResponsavel, Plano, EhMatriz, TemFiliais, MatrizId, Ativo, DataCriacao, DataAtualizacao
             FROM Estabelecimentos
-            WHERE (MatrizId IS NULL OR MatrizId = '00000000-0000-0000-0000-000000000000') AND Ativo = 1
+            WHERE MatrizId IS NULL
             ORDER BY Nome";
 
         var estabelecimentosPrincipais = (await _connection.QueryAsync<Estabelecimento>(sqlPrincipais, transaction: _transaction)).ToList();
@@ -172,10 +172,10 @@ public class EstabelecimentoRepository : RepositoryBase<Estabelecimento>, IEstab
 
         foreach (var estabelecimento in estabelecimentosPrincipais)
         {
-            // Apenas buscar filiais se for uma matriz
-            if (estabelecimento.EhMatriz)
+            // Buscar filiais para todos os estabelecimentos
+            var filiais = (await _connection.QueryAsync<Estabelecimento>(sqlFiliais, new { MatrizId = estabelecimento.Id }, transaction: _transaction)).ToList();
+            if (filiais.Any())
             {
-                var filiais = (await _connection.QueryAsync<Estabelecimento>(sqlFiliais, new { MatrizId = estabelecimento.Id }, transaction: _transaction)).ToList();
                 estabelecimento.Filiais = filiais;
             }
         }
