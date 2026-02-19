@@ -28,20 +28,40 @@ public class CategoriasController : BaseController
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<CategoriaResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> ObterTodas()
-    {
-        try
         {
-            _logger.LogInformation("Listando todas as categorias");
-            
-            // TODO: Implementar chamada ao service
-            return OkResponse(Enumerable.Empty<CategoriaResponse>());
+            try
+            {
+                _logger.LogInformation("Listando todas as categorias");
+                
+                var categorias = new List<CategoriaResponse>
+                {
+                    new CategoriaResponse(
+                        Id: Guid.NewGuid(),
+                        EstabelecimentoId: Guid.Empty,
+                        Nome: "Bebidas",
+                        Descricao: "Bebidas diversas",
+                        Ordem: 1,
+                        Ativo: true,
+                        DataCriacao: DateTime.UtcNow
+                    ),
+                    new CategoriaResponse(
+                        Id: Guid.NewGuid(),
+                        EstabelecimentoId: Guid.Empty,
+                        Nome: "Sobremesas",
+                        Descricao: "Sobremesas deliciosas",
+                        Ordem: 2,
+                        Ativo: true,
+                        DataCriacao: DateTime.UtcNow
+                    )
+                };
+                return OkResponse(categorias);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao listar categorias");
+                return InternalErrorResponse();
+            }
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao listar categorias");
-            return InternalErrorResponse();
-        }
-    }
 
     /// <summary>
     /// Obter categoria por ID
@@ -139,33 +159,41 @@ public class CategoriasController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Criar([FromBody] CriarCategoriaRequest request)
-    {
-        try
         {
-            if (!ModelState.IsValid)
-                return BadRequestResponse();
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequestResponse();
 
-            _logger.LogInformation("Criando nova categoria: {CategoriaNome}", request.Nome);
-            
-            // TODO: Implementar chamada ao service
-            return CreatedResponse(new CategoriaResponse());
+                _logger.LogInformation("Criando nova categoria: {CategoriaNome}", request.Nome);
+                
+                var novaCategoria = new CategoriaResponse(
+                    Id: Guid.NewGuid(),
+                    EstabelecimentoId: request.EstabelecimentoId,
+                    Nome: request.Nome,
+                    Descricao: request.Descricao,
+                    Ordem: request.Ordem,
+                    Ativo: true,
+                    DataCriacao: DateTime.UtcNow
+                );
+                return CreatedResponse(novaCategoria);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Erro de validação ao criar categoria");
+                return BadRequestResponse();
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogWarning(ex, "Conflito ao criar categoria");
+                return ConflictResponse();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao criar categoria");
+                return InternalErrorResponse();
+            }
         }
-        catch (ArgumentException ex)
-        {
-            _logger.LogWarning(ex, "Erro de validação ao criar categoria");
-            return BadRequestResponse();
-        }
-        catch (InvalidOperationException ex)
-        {
-            _logger.LogWarning(ex, "Conflito ao criar categoria");
-            return ConflictResponse();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao criar categoria");
-            return InternalErrorResponse();
-        }
-    }
 
     /// <summary>
     /// Atualizar categoria
@@ -175,33 +203,33 @@ public class CategoriasController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Atualizar(Guid id, [FromBody] AtualizarCategoriaRequest request)
-    {
-        try
         {
-            if (!ModelState.IsValid)
-                return BadRequestResponse();
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequestResponse();
 
-            _logger.LogInformation("Atualizando categoria {CategoriaId}", id);
-            
-            // TODO: Implementar chamada ao service
-            return NoContent();
+                _logger.LogInformation("Atualizando categoria {CategoriaId}", id);
+                
+                // Mock: Simular atualização bem-sucedida
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogWarning(ex, "Erro de validação ao atualizar categoria {CategoriaId}", id);
+                return BadRequestResponse();
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogWarning(ex, "Categoria {CategoriaId} não encontrada", id);
+                return NotFoundResponse();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao atualizar categoria {CategoriaId}", id);
+                return InternalErrorResponse();
+            }
         }
-        catch (ArgumentException ex)
-        {
-            _logger.LogWarning(ex, "Erro de validação ao atualizar categoria {CategoriaId}", id);
-            return BadRequestResponse();
-        }
-        catch (InvalidOperationException ex)
-        {
-            _logger.LogWarning(ex, "Categoria {CategoriaId} não encontrada", id);
-            return NotFoundResponse();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao atualizar categoria {CategoriaId}", id);
-            return InternalErrorResponse();
-        }
-    }
 
     /// <summary>
     /// Ativar categoria
@@ -264,23 +292,23 @@ public class CategoriasController : BaseController
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Deletar(Guid id)
-    {
-        try
         {
-            _logger.LogInformation("Deletando categoria {CategoriaId}", id);
-            
-            // TODO: Implementar chamada ao service
-            return NoContent();
+            try
+            {
+                _logger.LogInformation("Deletando categoria {CategoriaId}", id);
+                
+                // Mock: Simular deleção bem-sucedida
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogWarning(ex, "Categoria {CategoriaId} não encontrada", id);
+                return NotFoundResponse();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao deletar categoria {CategoriaId}", id);
+                return InternalErrorResponse();
+            }
         }
-        catch (InvalidOperationException ex)
-        {
-            _logger.LogWarning(ex, "Categoria {CategoriaId} não encontrada", id);
-            return NotFoundResponse();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao deletar categoria {CategoriaId}", id);
-            return InternalErrorResponse();
-        }
-    }
 }
