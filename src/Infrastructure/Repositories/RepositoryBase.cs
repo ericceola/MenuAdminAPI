@@ -1,4 +1,5 @@
 using System.Data;
+using System.ComponentModel.DataAnnotations.Schema;
 using Dapper;
 
 namespace MenuAdminAPI.Infrastructure.Repositories;
@@ -57,6 +58,8 @@ public abstract class RepositoryBase<T> where T : class
 
         var propriedades = typeof(T).GetProperties()
             .Where(p => p.CanRead && p.GetValue(entidade) != null)
+            .Where(p => !IsNotMappedProperty(p)) // Ignorar propriedades com [NotMapped]
+            .Where(p => IsSimpleType(p.PropertyType)) // Ignorar collections e tipos complexos
             .ToList();
 
         var colunas = string.Join(", ", propriedades.Select(p => p.Name));
@@ -79,6 +82,8 @@ public abstract class RepositoryBase<T> where T : class
 
         var propriedades = typeof(T).GetProperties()
             .Where(p => p.CanRead && p.Name != "Id")
+            .Where(p => !IsNotMappedProperty(p)) // Ignorar propriedades com [NotMapped]
+            .Where(p => IsSimpleType(p.PropertyType)) // Ignorar collections e tipos complexos
             .ToList();
 
         var atualizacoes = string.Join(", ", propriedades.Select(p => $"{p.Name} = @{p.Name}"));
@@ -135,5 +140,29 @@ public abstract class RepositoryBase<T> where T : class
         var itens = await _connection.QueryAsync<T>(sql, transaction: _transaction);
 
         return (itens, total);
+    }
+
+    /// <summary>
+    /// Verificar se a propriedade tem atributo [NotMapped]
+    /// </summary>
+    private bool IsNotMappedProperty(System.Reflection.PropertyInfo property)
+    {
+        return property.GetCustomAttributes(typeof(NotMappedAttribute), false).Length > 0;
+    }
+
+    /// <summary>
+    /// Verificar se o tipo é um tipo simples (primitivo ou string)
+    /// </summary>
+    private bool IsSimpleType(Type type)
+    {
+        return type.IsPrimitive || 
+               type == typeof(string) || 
+               type == typeof(decimal) || 
+               type == typeof(DateTime) || 
+               type == typeof(DateTimeOffset) || 
+               type == typeof(TimeSpan) || 
+               type == typeof(Guid) || 
+               (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>) && 
+                IsSimpleType(type.GetGenericArguments()[0]));
     }
 }
