@@ -3,12 +3,14 @@ namespace MenuAdminAPI.Application.DTOs;
 public record CriarCategoriaRequest(
     Guid EstabelecimentoId,
     string Nome,
+    string? Emoji,
     string Descricao,
     int Ordem
 );
 
 public record AtualizarCategoriaRequest(
     string Nome,
+    string? Emoji,
     string Descricao,
     int Ordem
 );
@@ -30,6 +32,7 @@ public record CategoriaResponse(
     Guid Id = default,
     Guid EstabelecimentoId = default,
     string Nome = "",
+    string? Emoji = "📦",
     string Descricao = "",
     int Ordem = 0,
     bool Ativo = false,
@@ -49,6 +52,7 @@ public record SubcategoriaResponse(
 public record CategoriaComSubcategoriasResponse(
     Guid Id,
     string Nome,
+    string? Emoji,
     string Descricao,
     IEnumerable<SubcategoriaResponse> Subcategorias
 );

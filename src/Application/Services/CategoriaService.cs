@@ -75,6 +75,7 @@ public class CategoriaService : ICategoriaService
             Id = Guid.NewGuid(),
             EstabelecimentoId = request.EstabelecimentoId,
             Nome = request.Nome.Trim(),
+            Emoji = request.Emoji ?? "📦",
             Descricao = request.Descricao?.Trim() ?? "",
             Ordem = request.Ordem,
             Ativo = true,
@@ -97,6 +98,7 @@ public class CategoriaService : ICategoriaService
             throw new ArgumentException("Nome da categoria é obrigatório");
 
         categoria.Nome = request.Nome.Trim();
+        categoria.Emoji = request.Emoji ?? "📦";
         categoria.Descricao = request.Descricao?.Trim() ?? "";
         categoria.Ordem = request.Ordem;
 
@@ -142,6 +144,7 @@ public class CategoriaService : ICategoriaService
             Id: categoria.Id,
             EstabelecimentoId: categoria.EstabelecimentoId,
             Nome: categoria.Nome,
+            Emoji: categoria.Emoji,
             Descricao: categoria.Descricao,
             Ordem: categoria.Ordem,
             Ativo: categoria.Ativo,

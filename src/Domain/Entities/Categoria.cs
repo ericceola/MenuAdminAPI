@@ -8,6 +8,7 @@ public class Categoria
     public Guid Id { get; set; }
     public Guid EstabelecimentoId { get; set; }
     public string Nome { get; set; } = string.Empty;
+    public string? Emoji { get; set; } = "📦";
     public string Descricao { get; set; } = string.Empty;
     public int Ordem { get; set; }
     public bool Ativo { get; set; } = true;
