@@ -113,6 +113,7 @@ public static class MappingProfile
             categoria.Id,
             categoria.EstabelecimentoId,
             categoria.Nome,
+            categoria.Emoji,
             categoria.Descricao,
             categoria.Ordem,
             categoria.Ativo,
@@ -125,6 +126,7 @@ public static class MappingProfile
             Id = Guid.NewGuid(),
             EstabelecimentoId = request.EstabelecimentoId,
             Nome = request.Nome,
+            Emoji = request.Emoji ?? "📦",
             Descricao = request.Descricao,
             Ordem = request.Ordem
         };
