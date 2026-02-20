@@ -88,20 +88,19 @@ public class SubcategoriaRepository : RepositoryBase<Subcategoria>, ISubcategori
     }
 
     /// <summary>
-    /// Buscar subcategorias por termo
+    /// Buscar subcategorias por termo (retorna todas se termo vazio)
     /// </summary>
     public async Task<IEnumerable<Subcategoria>> BuscarAsync(string termo)
     {
-        if (string.IsNullOrWhiteSpace(termo))
-            return Enumerable.Empty<Subcategoria>();
+        // Se termo vazio, busca todas as subcategorias ativas
+        var termoLike = string.IsNullOrWhiteSpace(termo) ? "%" : $"%{termo}%";
 
         const string sql = @"
             SELECT Id, CategoriaId, Nome, Descricao, Ordem, Ativo, DataCriacao, DataAtualizacao
             FROM Subcategorias
             WHERE Ativo = 1 AND (Nome LIKE @Termo OR Descricao LIKE @Termo)
-            ORDER BY Nome";
+            ORDER BY Ordem, Nome";
 
-        var termoLike = $"%{termo}%";
         return await _connection.QueryAsync<Subcategoria>(sql, new { Termo = termoLike });
     }
 

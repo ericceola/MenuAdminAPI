@@ -44,12 +44,12 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
     }
 
     /// <summary>
-    /// Buscar produtos por termo
+    /// Buscar produtos por termo (retorna todos se termo vazio)
     /// </summary>
     public async Task<IEnumerable<Produto>> BuscarAsync(string termo)
     {
-        if (string.IsNullOrWhiteSpace(termo))
-            return Enumerable.Empty<Produto>();
+        // Se termo vazio, busca todos os produtos ativos
+        var termoLike = string.IsNullOrWhiteSpace(termo) ? "%" : $"%{termo}%";
 
         const string sql = @"
             SELECT Id, SubcategoriaId, Nome, Descricao, Preco, Imagem, Ativo, DataCriacao, DataAtualizacao
@@ -57,7 +57,6 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
             WHERE Ativo = 1 AND (Nome LIKE @Termo OR Descricao LIKE @Termo)
             ORDER BY Nome";
 
-        var termoLike = $"%{termo}%";
         return await _connection.QueryAsync<Produto>(sql, new { Termo = termoLike });
     }
 

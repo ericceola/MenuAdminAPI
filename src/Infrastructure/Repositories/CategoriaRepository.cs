@@ -44,20 +44,19 @@ public class CategoriaRepository : RepositoryBase<Categoria>, ICategoriaReposito
     }
 
     /// <summary>
-    /// Buscar categorias por termo
+    /// Buscar categorias por termo (retorna todas se termo vazio)
     /// </summary>
     public async Task<IEnumerable<Categoria>> BuscarAsync(string termo)
     {
-        if (string.IsNullOrWhiteSpace(termo))
-            return Enumerable.Empty<Categoria>();
+        // Se termo vazio, busca todas as categorias ativas
+        var termoLike = string.IsNullOrWhiteSpace(termo) ? "%" : $"%{termo}%";
 
         const string sql = @"
             SELECT Id, EstabelecimentoId, Nome, Descricao, Ordem, Ativo, DataCriacao, DataAtualizacao
             FROM Categorias
             WHERE Ativo = 1 AND (Nome LIKE @Termo OR Descricao LIKE @Termo)
-            ORDER BY Nome";
+            ORDER BY Ordem, Nome";
 
-        var termoLike = $"%{termo}%";
         return await _connection.QueryAsync<Categoria>(sql, new { Termo = termoLike });
     }
 
