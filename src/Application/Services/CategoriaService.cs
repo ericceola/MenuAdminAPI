@@ -53,18 +53,6 @@ public class CategoriaService : ICategoriaService
         return MapToCategoriaResponse(categoria);
     }
 
-    public async Task<IEnumerable<CategoriaResponse>> ObterPorEstabelecimentoAsync(Guid estabelecimentoId)
-    {
-        var categorias = await _unitOfWork.Categorias.ObterPorEstabelecimentoAsync(estabelecimentoId);
-        return categorias.Select(MapToCategoriaResponse);
-    }
-
-    public async Task<IEnumerable<CategoriaResponse>> ObterAtivasPorEstabelecimentoAsync(Guid estabelecimentoId)
-    {
-        var categorias = await _unitOfWork.Categorias.ObterAtivasPorEstabelecimentoAsync(estabelecimentoId);
-        return categorias.Select(MapToCategoriaResponse);
-    }
-
     public async Task<IEnumerable<CategoriaResponse>> BuscarAsync(string termo)
     {
         if (string.IsNullOrWhiteSpace(termo))
