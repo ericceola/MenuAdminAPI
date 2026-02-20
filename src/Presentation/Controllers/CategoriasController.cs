@@ -84,26 +84,7 @@ public class CategoriasController : BaseController
         }
     }
 
-    /// <summary>
-    /// Listar categorias por estabelecimento
-    /// </summary>
-    [HttpGet("estabelecimento/{estabelecimentoId}")]
-    [ProducesResponseType(typeof(IEnumerable<CategoriaResponse>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> ObterPorEstabelecimento(Guid estabelecimentoId)
-    {
-        try
-        {
-            _logger.LogInformation("Listando categorias do estabelecimento {EstabelecimentoId}", estabelecimentoId);
-            
-            // TODO: Implementar chamada ao service
-            return OkResponse(Enumerable.Empty<CategoriaResponse>());
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Erro ao listar categorias do estabelecimento {EstabelecimentoId}", estabelecimentoId);
-            return InternalErrorResponse();
-        }
-    }
+
 
     /// <summary>
     /// Listar apenas categorias ativas por estabelecimento
