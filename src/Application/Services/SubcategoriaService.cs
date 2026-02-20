@@ -28,7 +28,8 @@ public class SubcategoriaService : ISubcategoriaService
 
     public async Task<IEnumerable<SubcategoriaResponse>> ObterTodasAsync()
     {
-        var subcategorias = await _unitOfWork.Subcategorias.ObterTodasAsync();
+        // Retorna todas as subcategorias ativas
+        var subcategorias = await _unitOfWork.Subcategorias.BuscarAsync("");
         return subcategorias.Select(MapToSubcategoriaResponse);
     }
 
@@ -102,7 +103,7 @@ public class SubcategoriaService : ISubcategoriaService
         subcategoria.Descricao = request.Descricao?.Trim() ?? "";
         subcategoria.Ordem = request.Ordem;
 
-        _unitOfWork.Subcategorias.Atualizar(subcategoria);
+        await _unitOfWork.Subcategorias.AtualizarAsync(subcategoria);
         await _unitOfWork.SaveChangesAsync();
     }
 
@@ -113,7 +114,7 @@ public class SubcategoriaService : ISubcategoriaService
             throw new InvalidOperationException($"Subcategoria com ID {id} não encontrada");
 
         subcategoria.Ativo = true;
-        _unitOfWork.Subcategorias.Atualizar(subcategoria);
+        await _unitOfWork.Subcategorias.AtualizarAsync(subcategoria);
         await _unitOfWork.SaveChangesAsync();
     }
 
@@ -124,7 +125,7 @@ public class SubcategoriaService : ISubcategoriaService
             throw new InvalidOperationException($"Subcategoria com ID {id} não encontrada");
 
         subcategoria.Ativo = false;
-        _unitOfWork.Subcategorias.Atualizar(subcategoria);
+        await _unitOfWork.Subcategorias.AtualizarAsync(subcategoria);
         await _unitOfWork.SaveChangesAsync();
     }
 
@@ -134,7 +135,7 @@ public class SubcategoriaService : ISubcategoriaService
         if (subcategoria == null)
             throw new InvalidOperationException($"Subcategoria com ID {id} não encontrada");
 
-        _unitOfWork.Subcategorias.Remover(subcategoria);
+        await _unitOfWork.Subcategorias.RemoverAsync(id);
         await _unitOfWork.SaveChangesAsync();
     }
 

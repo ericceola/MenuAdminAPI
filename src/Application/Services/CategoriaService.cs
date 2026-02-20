@@ -28,7 +28,8 @@ public class CategoriaService : ICategoriaService
 
     public async Task<IEnumerable<CategoriaResponse>> ObterTodasAsync()
     {
-        var categorias = await _unitOfWork.Categorias.ObterTodasAsync();
+        // Retorna categorias ativas de todos os estabelecimentos
+        var categorias = await _unitOfWork.Categorias.BuscarAsync("");
         return categorias.Select(MapToCategoriaResponse);
     }
 
@@ -99,7 +100,7 @@ public class CategoriaService : ICategoriaService
         categoria.Descricao = request.Descricao?.Trim() ?? "";
         categoria.Ordem = request.Ordem;
 
-        _unitOfWork.Categorias.Atualizar(categoria);
+        await _unitOfWork.Categorias.AtualizarAsync(categoria);
         await _unitOfWork.SaveChangesAsync();
     }
 
@@ -110,7 +111,7 @@ public class CategoriaService : ICategoriaService
             throw new InvalidOperationException($"Categoria com ID {id} não encontrada");
 
         categoria.Ativo = true;
-        _unitOfWork.Categorias.Atualizar(categoria);
+        await _unitOfWork.Categorias.AtualizarAsync(categoria);
         await _unitOfWork.SaveChangesAsync();
     }
 
@@ -121,7 +122,7 @@ public class CategoriaService : ICategoriaService
             throw new InvalidOperationException($"Categoria com ID {id} não encontrada");
 
         categoria.Ativo = false;
-        _unitOfWork.Categorias.Atualizar(categoria);
+        await _unitOfWork.Categorias.AtualizarAsync(categoria);
         await _unitOfWork.SaveChangesAsync();
     }
 
@@ -131,7 +132,7 @@ public class CategoriaService : ICategoriaService
         if (categoria == null)
             throw new InvalidOperationException($"Categoria com ID {id} não encontrada");
 
-        _unitOfWork.Categorias.Remover(categoria);
+        await _unitOfWork.Categorias.RemoverAsync(id);
         await _unitOfWork.SaveChangesAsync();
     }
 
