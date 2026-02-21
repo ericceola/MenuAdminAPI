@@ -76,8 +76,8 @@ public class ProdutosController : BaseController
         {
             _logger.LogInformation("Listando produtos da subcategoria {SubcategoriaId}", subcategoriaId);
             
-            // TODO: Implementar chamada ao service
-            return OkResponse(Enumerable.Empty<ProdutoResponse>());
+            var produtos = await _produtoService.ObterPorSubcategoriaAsync(subcategoriaId);
+            return OkResponse(produtos);
         }
         catch (Exception ex)
         {

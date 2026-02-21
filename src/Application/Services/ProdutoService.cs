@@ -7,6 +7,7 @@ public interface IProdutoService
 {
     Task<IEnumerable<ProdutoResponse>> ObterTodosAsync();
     Task<ProdutoResponse?> ObterPorIdAsync(Guid id);
+    Task<IEnumerable<ProdutoResponse>> ObterPorSubcategoriaAsync(Guid subcategoriaId);
     Task<ProdutoResponse> CriarAsync(CriarProdutoRequest request);
     Task<ProdutoResponse> AtualizarAsync(Guid id, AtualizarProdutoRequest request);
     Task DeletarAsync(Guid id);
@@ -31,6 +32,22 @@ public class ProdutoService : IProdutoService
     {
         // TODO: Implementar busca de produto por ID
         return null;
+    }
+
+    public async Task<IEnumerable<ProdutoResponse>> ObterPorSubcategoriaAsync(Guid subcategoriaId)
+    {
+        var produtos = await _unitOfWork.Produtos.ObterPorSubcategoriaAsync(subcategoriaId);
+        
+        return produtos.Select(p => new ProdutoResponse(
+            Id: p.Id,
+            SubcategoriaId: p.SubcategoriaId,
+            Nome: p.Nome,
+            Descricao: p.Descricao ?? string.Empty,
+            Preco: p.Preco,
+            ImagemUrl: p.Imagem,
+            Ativo: p.Ativo,
+            DataCriacao: p.DataCriacao
+        ));
     }
 
     public async Task<ProdutoResponse> CriarAsync(CriarProdutoRequest request)
