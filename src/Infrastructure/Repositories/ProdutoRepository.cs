@@ -21,7 +21,7 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
     public async Task<IEnumerable<Produto>> ObterPorSubcategoriaAsync(Guid subcategoriaId)
     {
         const string sql = @"
-            SELECT Id, SubcategoriaId, Nome, Descricao, Preco, Imagem, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, SubcategoriaId, Nome, Descricao, Preco, ImagemUrl, Ativo, DataCriacao, DataAtualizacao
             FROM Produtos
             WHERE SubcategoriaId = @SubcategoriaId AND Ativo = 1
             ORDER BY Nome";
@@ -35,7 +35,7 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
     public async Task<IEnumerable<Produto>> ObterAtivosPorSubcategoriaAsync(Guid subcategoriaId)
     {
         const string sql = @"
-            SELECT Id, SubcategoriaId, Nome, Descricao, Preco, Imagem, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, SubcategoriaId, Nome, Descricao, Preco, ImagemUrl, Ativo, DataCriacao, DataAtualizacao
             FROM Produtos
             WHERE SubcategoriaId = @SubcategoriaId AND Ativo = 1
             ORDER BY Nome";
@@ -52,7 +52,7 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
         var termoLike = string.IsNullOrWhiteSpace(termo) ? "%" : $"%{termo}%";
 
         const string sql = @"
-            SELECT Id, SubcategoriaId, Nome, Descricao, Preco, Imagem, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, SubcategoriaId, Nome, Descricao, Preco, ImagemUrl, Ativo, DataCriacao, DataAtualizacao
             FROM Produtos
             WHERE Ativo = 1 AND (Nome LIKE @Termo OR Descricao LIKE @Termo)
             ORDER BY Nome";
