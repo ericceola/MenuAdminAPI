@@ -7,6 +7,7 @@ public class Subcategoria
 {
     public Guid Id { get; set; }
     public Guid CategoriaId { get; set; }
+    public Guid EstabelecimentoId { get; set; }
     public string Nome { get; set; } = string.Empty;
     public string Descricao { get; set; } = string.Empty;
     public int Ordem { get; set; }
