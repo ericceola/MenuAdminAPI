@@ -77,6 +77,7 @@ public class SubcategoriaService : ISubcategoriaService
         {
             Id = Guid.NewGuid(),
             CategoriaId = request.CategoriaId,
+            EstabelecimentoId = categoria.EstabelecimentoId,
             Nome = request.Nome.Trim(),
             Descricao = request.Descricao?.Trim() ?? "",
             Ordem = request.Ordem,
