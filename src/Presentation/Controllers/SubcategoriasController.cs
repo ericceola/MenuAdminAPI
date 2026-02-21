@@ -213,7 +213,7 @@ public class SubcategoriasController : BaseController
         {
             _logger.LogInformation("Ativando subcategoria {SubcategoriaId}", id);
             
-            // TODO: Implementar chamada ao service
+            await _subcategoriaService.AtivarAsync(id);
             return NoContent();
         }
         catch (InvalidOperationException ex)
@@ -240,7 +240,7 @@ public class SubcategoriasController : BaseController
         {
             _logger.LogInformation("Desativando subcategoria {SubcategoriaId}", id);
             
-            // TODO: Implementar chamada ao service
+            await _subcategoriaService.DesativarAsync(id);
             return NoContent();
         }
         catch (InvalidOperationException ex)

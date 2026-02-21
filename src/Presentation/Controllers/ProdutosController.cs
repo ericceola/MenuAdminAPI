@@ -215,7 +215,7 @@ public class ProdutosController : BaseController
         {
             _logger.LogInformation("Ativando produto {ProdutoId}", id);
             
-            // TODO: Implementar chamada ao service
+            await _produtoService.AtivarAsync(id);
             return NoContent();
         }
         catch (InvalidOperationException ex)
@@ -242,7 +242,7 @@ public class ProdutosController : BaseController
         {
             _logger.LogInformation("Desativando produto {ProdutoId}", id);
             
-            // TODO: Implementar chamada ao service
+            await _produtoService.DesativarAsync(id);
             return NoContent();
         }
         catch (InvalidOperationException ex)

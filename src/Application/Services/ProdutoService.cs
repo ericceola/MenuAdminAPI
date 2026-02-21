@@ -10,6 +10,8 @@ public interface IProdutoService
     Task<IEnumerable<ProdutoResponse>> ObterPorSubcategoriaAsync(Guid subcategoriaId);
     Task<ProdutoResponse> CriarAsync(CriarProdutoRequest request);
     Task<ProdutoResponse> AtualizarAsync(Guid id, AtualizarProdutoRequest request);
+    Task AtivarAsync(Guid id);
+    Task DesativarAsync(Guid id);
     Task DeletarAsync(Guid id);
 }
 
@@ -60,6 +62,28 @@ public class ProdutoService : IProdutoService
     {
         // TODO: Implementar atualização de produto
         throw new NotImplementedException();
+    }
+
+    public async Task AtivarAsync(Guid id)
+    {
+        var produto = await _unitOfWork.Produtos.ObterPorIdAsync(id);
+        if (produto == null)
+            throw new InvalidOperationException($"Produto com ID {id} não encontrado");
+
+        produto.Ativo = true;
+        await _unitOfWork.Produtos.AtualizarAsync(produto);
+        await _unitOfWork.SaveChangesAsync();
+    }
+
+    public async Task DesativarAsync(Guid id)
+    {
+        var produto = await _unitOfWork.Produtos.ObterPorIdAsync(id);
+        if (produto == null)
+            throw new InvalidOperationException($"Produto com ID {id} não encontrado");
+
+        produto.Ativo = false;
+        await _unitOfWork.Produtos.AtualizarAsync(produto);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task DeletarAsync(Guid id)
