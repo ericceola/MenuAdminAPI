@@ -16,6 +16,19 @@ public class CategoriaRepository : RepositoryBase<Categoria>, ICategoriaReposito
     }
 
     /// <summary>
+    /// Obter categoria por ID
+    /// </summary>
+    public override async Task<Categoria?> ObterPorIdAsync(Guid id)
+    {
+        const string sql = @"
+            SELECT Id, EstabelecimentoId, Nome, Emoji, Descricao, Ordem, Ativo, DataCriacao, DataAtualizacao
+            FROM Categorias
+            WHERE Id = @Id";
+
+        return await _connection.QueryFirstOrDefaultAsync<Categoria>(sql, new { Id = id });
+    }
+
+    /// <summary>
     /// Obter categorias por estabelecimento
     /// </summary>
     public async Task<IEnumerable<Categoria>> ObterPorEstabelecimentoAsync(Guid estabelecimentoId)
