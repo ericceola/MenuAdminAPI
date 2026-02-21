@@ -44,7 +44,7 @@ public class ProdutoService : IProdutoService
             Nome: p.Nome,
             Descricao: p.Descricao ?? string.Empty,
             Preco: p.Preco,
-            ImagemUrl: p.Imagem,
+            ImagemUrl: p.ImagemUrl,
             Ativo: p.Ativo,
             DataCriacao: p.DataCriacao
         ));
