@@ -21,7 +21,7 @@ public class CategoriaRepository : RepositoryBase<Categoria>, ICategoriaReposito
     public async Task<IEnumerable<Categoria>> ObterPorEstabelecimentoAsync(Guid estabelecimentoId)
     {
         const string sql = @"
-            SELECT Id, EstabelecimentoId, Nome, Descricao, Ordem, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, EstabelecimentoId, Nome, Emoji, Descricao, Ordem, Ativo, DataCriacao, DataAtualizacao
             FROM Categorias
             WHERE EstabelecimentoId = @EstabelecimentoId AND Ativo = 1
             ORDER BY Ordem, Nome";
@@ -35,7 +35,7 @@ public class CategoriaRepository : RepositoryBase<Categoria>, ICategoriaReposito
     public async Task<IEnumerable<Categoria>> ObterAtivasPorEstabelecimentoAsync(Guid estabelecimentoId)
     {
         const string sql = @"
-            SELECT Id, EstabelecimentoId, Nome, Descricao, Ordem, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, EstabelecimentoId, Nome, Emoji, Descricao, Ordem, Ativo, DataCriacao, DataAtualizacao
             FROM Categorias
             WHERE EstabelecimentoId = @EstabelecimentoId AND Ativo = 1
             ORDER BY Ordem, Nome";
@@ -52,7 +52,7 @@ public class CategoriaRepository : RepositoryBase<Categoria>, ICategoriaReposito
         var termoLike = string.IsNullOrWhiteSpace(termo) ? "%" : $"%{termo}%";
 
         const string sql = @"
-            SELECT Id, EstabelecimentoId, Nome, Descricao, Ordem, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, EstabelecimentoId, Nome, Emoji, Descricao, Ordem, Ativo, DataCriacao, DataAtualizacao
             FROM Categorias
             WHERE Ativo = 1 AND (Nome LIKE @Termo OR Descricao LIKE @Termo)
             ORDER BY Ordem, Nome";
@@ -131,7 +131,7 @@ public class CategoriaRepository : RepositoryBase<Categoria>, ICategoriaReposito
         var total = await _connection.QueryFirstAsync<int>(sqlTotal, new { EstabelecimentoId = estabelecimentoId });
 
         const string sql = @"
-            SELECT Id, EstabelecimentoId, Nome, Descricao, Ordem, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, EstabelecimentoId, Nome, Emoji, Descricao, Ordem, Ativo, DataCriacao, DataAtualizacao
             FROM Categorias
             WHERE EstabelecimentoId = @EstabelecimentoId AND Ativo = 1
             ORDER BY Ordem, Nome
