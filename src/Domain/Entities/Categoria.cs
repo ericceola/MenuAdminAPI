@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace MenuAdminAPI.Domain.Entities;
 
 /// <summary>
@@ -18,9 +16,6 @@ public class Categoria
     public DateTime DataAtualizacao { get; set; } = DateTime.UtcNow;
 
     // Relacionamentos
-    [NotMapped]
     public Estabelecimento? Estabelecimento { get; set; }
-    
-    [NotMapped]
     public ICollection<Subcategoria> Subcategorias { get; set; } = new List<Subcategoria>();
 }

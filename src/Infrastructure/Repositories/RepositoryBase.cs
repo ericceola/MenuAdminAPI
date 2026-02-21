@@ -57,9 +57,9 @@ public abstract class RepositoryBase<T> where T : class
             throw new ArgumentNullException(nameof(entidade));
 
         var propriedades = typeof(T).GetProperties()
-            .Where(p => p.CanRead && p.GetValue(entidade) != null)
-            .Where(p => !IsNotMappedProperty(p)) // Ignorar propriedades com [NotMapped]
+            .Where(p => p.CanRead)
             .Where(p => IsSimpleType(p.PropertyType)) // Ignorar collections e tipos complexos
+            .Where(p => p.GetValue(entidade) != null) // Ignorar valores nulos
             .ToList();
 
         var colunas = string.Join(", ", propriedades.Select(p => p.Name));
