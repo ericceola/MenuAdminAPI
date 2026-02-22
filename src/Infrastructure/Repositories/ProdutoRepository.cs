@@ -23,7 +23,7 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
         const string sql = @"
             SELECT Id, SubcategoriaId, Nome, Descricao, Preco, ImagemUrl, Ativo, DataCriacao, DataAtualizacao
             FROM Produtos
-            WHERE SubcategoriaId = @SubcategoriaId AND Ativo = 1
+            WHERE SubcategoriaId = @SubcategoriaId
             ORDER BY Nome";
 
         return await _connection.QueryAsync<Produto>(sql, new { SubcategoriaId = subcategoriaId });

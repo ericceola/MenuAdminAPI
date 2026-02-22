@@ -36,7 +36,7 @@ public class CategoriaRepository : RepositoryBase<Categoria>, ICategoriaReposito
         const string sql = @"
             SELECT Id, EstabelecimentoId, Nome, Emoji, Descricao, Ordem, Ativo, DataCriacao, DataAtualizacao
             FROM Categorias
-            WHERE EstabelecimentoId = @EstabelecimentoId AND Ativo = 1
+            WHERE EstabelecimentoId = @EstabelecimentoId
             ORDER BY Ordem, Nome";
 
         return await _connection.QueryAsync<Categoria>(sql, new { EstabelecimentoId = estabelecimentoId });
