@@ -54,8 +54,67 @@ public class ProdutoService : IProdutoService
 
     public async Task<ProdutoResponse> CriarAsync(CriarProdutoRequest request)
     {
-        // TODO: Implementar criação de produto
-        throw new NotImplementedException();
+        // Criar o produto
+        var produto = new Domain.Entities.Produto
+        {
+            Id = Guid.NewGuid(),
+            SubcategoriaId = request.SubcategoriaId,
+            Nome = request.Nome.Trim(),
+            Descricao = request.Descricao?.Trim() ?? "",
+            Preco = request.Preco,
+            ImagemUrl = request.ImagemUrl?.Trim(),
+            Ativo = true,
+            DataCriacao = DateTime.UtcNow
+        };
+
+        await _unitOfWork.Produtos.InserirAsync(produto);
+
+        // Criar variantes se fornecidas
+        if (request.Variantes != null && request.Variantes.Any())
+        {
+            foreach (var varianteDto in request.Variantes)
+            {
+                var variante = new Domain.Entities.Variante
+                {
+                    Id = Guid.NewGuid(),
+                    ProdutoId = produto.Id,
+                    Nome = varianteDto.Nome.Trim(),
+                    PrecoAdicional = varianteDto.PrecoAdicional,
+                    Ativo = true
+                };
+                await _unitOfWork.Variantes.InserirAsync(variante);
+            }
+        }
+
+        // Criar adicionais se fornecidos
+        if (request.Adicionais != null && request.Adicionais.Any())
+        {
+            foreach (var adicionalDto in request.Adicionais)
+            {
+                var adicional = new Domain.Entities.Adicional
+                {
+                    Id = Guid.NewGuid(),
+                    ProdutoId = produto.Id,
+                    Nome = adicionalDto.Nome.Trim(),
+                    Preco = adicionalDto.Preco,
+                    Ativo = true
+                };
+                await _unitOfWork.Adicionais.InserirAsync(adicional);
+            }
+        }
+
+        await _unitOfWork.SaveChangesAsync();
+
+        return new ProdutoResponse(
+            Id: produto.Id,
+            SubcategoriaId: produto.SubcategoriaId,
+            Nome: produto.Nome,
+            Descricao: produto.Descricao,
+            Preco: produto.Preco,
+            ImagemUrl: produto.ImagemUrl,
+            Ativo: produto.Ativo,
+            DataCriacao: produto.DataCriacao
+        );
     }
 
     public async Task<ProdutoResponse> AtualizarAsync(Guid id, AtualizarProdutoRequest request)

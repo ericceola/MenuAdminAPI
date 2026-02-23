@@ -5,7 +5,19 @@ public record CriarProdutoRequest(
     string Nome,
     string Descricao,
     decimal Preco,
-    string? ImagemUrl = null
+    string? ImagemUrl = null,
+    List<CriarVarianteDto>? Variantes = null,
+    List<CriarAdicionalDto>? Adicionais = null
+);
+
+public record CriarVarianteDto(
+    string Nome,
+    decimal PrecoAdicional
+);
+
+public record CriarAdicionalDto(
+    string Nome,
+    decimal Preco
 );
 
 public record AtualizarProdutoRequest(
