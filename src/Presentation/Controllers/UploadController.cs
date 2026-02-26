@@ -1,7 +1,10 @@
 using MenuAdminAPI.Application.Services;
+using MenuAdminAPI.Domain.Entities;
+using MenuAdminAPI.Infrastructure.Repositories;
 using MenuAdminAPI.Presentation.Controllers.Base;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace MenuAdminAPI.Presentation.Controllers;
@@ -11,21 +14,28 @@ namespace MenuAdminAPI.Presentation.Controllers;
 public class UploadController : BaseController
 {
     private readonly IBlobStorageService _blobStorageService;
+    private readonly IImagemProdutoRepository _imagemProdutoRepository;
     private readonly ILogger<UploadController> _logger;
-    private const long MaxFileSize = 5 * 1024 * 1024; // 5MB
-    private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+    private const long MaxFileSize = 10 * 1024 * 1024; // 10MB
 
-    public UploadController(IBlobStorageService blobStorageService, ILogger<UploadController> logger)
+    public UploadController(
+        IBlobStorageService blobStorageService,
+        IConfiguration configuration,
+        ILogger<UploadController> logger)
     {
         _blobStorageService = blobStorageService;
+        var connectionString = configuration.GetConnectionString("DefaultConnection") 
+            ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+        _imagemProdutoRepository = new ImagemProdutoRepository(connectionString);
         _logger = logger;
     }
 
-    [HttpPost("Imagem")]
+    [HttpPost("produtos/{produtoId:guid}/imagem")]
+    [RequestSizeLimit(10_000_000)] // 10MB
     [ProducesResponseType(typeof(UploadImageResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UploadImagem(IFormFile file)
+    public async Task<IActionResult> UploadProdutoImagem(Guid produtoId, IFormFile file, CancellationToken ct)
     {
         try
         {
@@ -41,29 +51,67 @@ public class UploadController : BaseController
                 return BadRequest(new { message = $"Arquivo muito grande. Tamanho máximo: {MaxFileSize / 1024 / 1024}MB" });
             }
 
-            // Validar extensão
-            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
-            if (!AllowedExtensions.Contains(extension))
+            // Fazer upload (original + thumbnail)
+            var uploadResult = await _blobStorageService.UploadProductImageAsync(produtoId, file, ct);
+
+            // Salvar registro no banco
+            var imagemProduto = new ImagemProduto
             {
-                return BadRequest(new { message = $"Formato não permitido. Formatos aceitos: {string.Join(", ", AllowedExtensions)}" });
-            }
+                Id = Guid.NewGuid(),
+                ProdutoId = produtoId,
+                BlobOriginal = uploadResult.OriginalBlobName,
+                BlobThumb = uploadResult.ThumbBlobName,
+                ContentType = file.ContentType,
+                CreatedAt = DateTime.UtcNow
+            };
 
-            // Fazer upload
-            using var stream = file.OpenReadStream();
-            var imageUrl = await _blobStorageService.UploadImageAsync(stream, file.FileName, file.ContentType);
+            await _imagemProdutoRepository.CriarAsync(imagemProduto);
 
-            _logger.LogInformation("Upload de imagem realizado com sucesso: {ImageUrl}", imageUrl);
+            _logger.LogInformation("Upload de imagem realizado com sucesso para produto {ProdutoId}: {OriginalBlob}", 
+                produtoId, uploadResult.OriginalBlobName);
 
             return Ok(new UploadImageResponse
             {
-                Url = imageUrl,
-                FileName = file.FileName,
-                Size = file.Length
+                Id = imagemProduto.Id,
+                OriginalBlob = uploadResult.OriginalBlobName,
+                ThumbBlob = uploadResult.ThumbBlobName,
+                ContentType = file.ContentType
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            _logger.LogWarning(ex, "Validação de upload falhou para produto {ProdutoId}", produtoId);
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao fazer upload de imagem para produto {ProdutoId}", produtoId);
+            return InternalErrorResponse();
+        }
+    }
+
+    [HttpGet("sas")]
+    [ProducesResponseType(typeof(SasUrlResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult GetSasUrl([FromQuery] string blobName, [FromQuery] int minutes = 30)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(blobName))
+                return BadRequest(new { message = "blobName é obrigatório" });
+
+            var ttl = TimeSpan.FromMinutes(Math.Clamp(minutes, 1, 180));
+            var sas = _blobStorageService.GenerateReadSas(blobName, ttl);
+
+            return Ok(new SasUrlResponse
+            {
+                Url = sas.Url,
+                ExpiresAt = sas.ExpiresAt
             });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao fazer upload de imagem");
+            _logger.LogError(ex, "Erro ao gerar SAS URL para blob {BlobName}", blobName);
             return InternalErrorResponse();
         }
     }
@@ -71,7 +119,14 @@ public class UploadController : BaseController
 
 public class UploadImageResponse
 {
+    public Guid Id { get; set; }
+    public string OriginalBlob { get; set; } = string.Empty;
+    public string ThumbBlob { get; set; } = string.Empty;
+    public string ContentType { get; set; } = string.Empty;
+}
+
+public class SasUrlResponse
+{
     public string Url { get; set; } = string.Empty;
-    public string FileName { get; set; } = string.Empty;
-    public long Size { get; set; }
+    public DateTimeOffset ExpiresAt { get; set; }
 }
