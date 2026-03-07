@@ -1,6 +1,6 @@
+using System.Data;
 using Dapper;
 using MenuAdminAPI.Domain.Entities;
-using MySql.Data.MySqlClient;
 
 namespace MenuAdminAPI.Infrastructure.Repositories;
 
@@ -13,11 +13,11 @@ public interface IImagemProdutoRepository
 
 public class ImagemProdutoRepository : IImagemProdutoRepository
 {
-    private readonly string _connectionString;
+    private readonly IDbConnection _connection;
 
-    public ImagemProdutoRepository(string connectionString)
+    public ImagemProdutoRepository(IDbConnection connection)
     {
-        _connectionString = connectionString;
+        _connection = connection;
     }
 
     public async Task<ImagemProduto> CriarAsync(ImagemProduto imagem)
@@ -27,8 +27,7 @@ public class ImagemProdutoRepository : IImagemProdutoRepository
             VALUES (@Id, @ProdutoId, @BlobOriginal, @BlobThumb, @ContentType, @CreatedAt);
         ";
 
-        using var connection = new MySqlConnection(_connectionString);
-        await connection.ExecuteAsync(sql, imagem);
+        await _connection.ExecuteAsync(sql, imagem);
         return imagem;
     }
 
@@ -41,8 +40,7 @@ public class ImagemProdutoRepository : IImagemProdutoRepository
             ORDER BY CreatedAt DESC;
         ";
 
-        using var connection = new MySqlConnection(_connectionString);
-        return await connection.QueryAsync<ImagemProduto>(sql, new { ProdutoId = produtoId });
+        return await _connection.QueryAsync<ImagemProduto>(sql, new { ProdutoId = produtoId });
     }
 
     public async Task<ImagemProduto?> ObterPorIdAsync(Guid id)
@@ -53,7 +51,6 @@ public class ImagemProdutoRepository : IImagemProdutoRepository
             WHERE Id = @Id;
         ";
 
-        using var connection = new MySqlConnection(_connectionString);
-        return await connection.QueryFirstOrDefaultAsync<ImagemProduto>(sql, new { Id = id });
+        return await _connection.QueryFirstOrDefaultAsync<ImagemProduto>(sql, new { Id = id });
     }
 }

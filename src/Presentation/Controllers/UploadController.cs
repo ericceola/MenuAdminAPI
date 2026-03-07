@@ -4,6 +4,7 @@ using MenuAdminAPI.Infrastructure.Repositories;
 using MenuAdminAPI.Presentation.Controllers.Base;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -26,7 +27,7 @@ public class UploadController : BaseController
         _blobStorageService = blobStorageService;
         var connectionString = configuration.GetConnectionString("DefaultConnection") 
             ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-        _imagemProdutoRepository = new ImagemProdutoRepository(connectionString);
+        _imagemProdutoRepository = new ImagemProdutoRepository(new SqlConnection(connectionString));
         _logger = logger;
     }
 
