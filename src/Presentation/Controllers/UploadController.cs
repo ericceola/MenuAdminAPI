@@ -1,7 +1,6 @@
 using MenuAdminAPI.Application.Services;
 using MenuAdminAPI.Domain.Entities;
 using MenuAdminAPI.Infrastructure.Repositories;
-using MenuAdminAPI.Presentation.Controllers.Base;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
