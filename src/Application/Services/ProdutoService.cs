@@ -67,7 +67,7 @@ public class ProdutoService : IProdutoService
             DataCriacao = DateTime.UtcNow
         };
 
-        await _unitOfWork.Produtos.CriarAsync(produto);
+        await _unitOfWork.Produtos.AdicionarAsync(produto);
 
         // Criar variantes se fornecidas
         if (request.Variantes != null && request.Variantes.Any())
@@ -82,7 +82,7 @@ public class ProdutoService : IProdutoService
                     PrecoAdicional = varianteDto.PrecoAdicional,
                     Ativo = true
                 };
-                await _unitOfWork.Variantes.CriarAsync(variante);
+                await _unitOfWork.Variantes.AdicionarAsync(variante);
             }
         }
 
@@ -99,7 +99,7 @@ public class ProdutoService : IProdutoService
                     Preco = adicionalDto.Preco,
                     Ativo = true
                 };
-                await _unitOfWork.Adicionais.CriarAsync(adicional);
+                await _unitOfWork.Adicionais.AdicionarAsync(adicional);
             }
         }
 
