@@ -49,6 +49,9 @@
 
     <!-- Utilities -->
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+
+    <!-- Database -->
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
   </ItemGroup>
 
 </Project>
