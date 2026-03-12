@@ -22,7 +22,7 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
     {
         const string sql = @"
             SELECT Id, SubcategoriaId, EstabelecimentoId, Nome, Descricao, Preco, ImagemUrl, ImagemBlobName,
-                   Ordem, Status, Ativo, DataCriacao, DataAtualizacao, DataExclusao
+                   Ordem, Status, Ativo, PossuiVariantes, DataCriacao, DataAtualizacao, DataExclusao
             FROM Produtos
             WHERE SubcategoriaId = @SubcategoriaId
             ORDER BY Ordem, Nome";
@@ -37,7 +37,7 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
     {
         const string sql = @"
             SELECT Id, SubcategoriaId, EstabelecimentoId, Nome, Descricao, Preco, ImagemUrl, ImagemBlobName,
-                   Ordem, Status, Ativo, DataCriacao, DataAtualizacao, DataExclusao
+                   Ordem, Status, Ativo, PossuiVariantes, DataCriacao, DataAtualizacao, DataExclusao
             FROM Produtos
             WHERE SubcategoriaId = @SubcategoriaId AND Ativo = 1
             ORDER BY Ordem, Nome";
@@ -52,7 +52,7 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
     {
         const string sql = @"
             SELECT Id, SubcategoriaId, EstabelecimentoId, Nome, Descricao, Preco, ImagemUrl, ImagemBlobName,
-                   Ordem, Status, Ativo, DataCriacao, DataAtualizacao, DataExclusao
+                   Ordem, Status, Ativo, PossuiVariantes, DataCriacao, DataAtualizacao, DataExclusao
             FROM Produtos
             WHERE EstabelecimentoId = @EstabelecimentoId
             ORDER BY Ordem, Nome";
@@ -69,7 +69,7 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
 
         const string sql = @"
             SELECT Id, SubcategoriaId, EstabelecimentoId, Nome, Descricao, Preco, ImagemUrl, ImagemBlobName,
-                   Ordem, Status, Ativo, DataCriacao, DataAtualizacao, DataExclusao
+                   Ordem, Status, Ativo, PossuiVariantes, DataCriacao, DataAtualizacao, DataExclusao
             FROM Produtos
             WHERE Ativo = 1 AND (Nome LIKE @Termo OR Descricao LIKE @Termo)
             ORDER BY Ordem, Nome";

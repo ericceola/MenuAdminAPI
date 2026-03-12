@@ -27,6 +27,10 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     private IVarianteRepository? _variantes;
     private IAdicionalRepository? _adicionais;
     private IEnderecoRepository? _enderecos;
+    private IAtributoProdutoRepository? _atributosProduto;
+    private IAtributoProdutoValorRepository? _atributosProdutoValores;
+    private IProdutoVarianteRepository? _produtoVariantes;
+    private IProdutoVarianteValorRepository? _produtoVariantesValores;
 
     public UnitOfWork(string connectionString)
     {
@@ -205,6 +209,74 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     }
 
     /// <summary>
+    /// Repositório de Atributos de Produto
+    /// </summary>
+    public IAtributoProdutoRepository AtributosProduto
+    {
+        get
+        {
+            if (_atributosProduto == null)
+                _atributosProduto = new AtributoProdutoRepository(GetConnection());
+            
+            if (_atributosProduto is RepositoryBase<AtributoProduto> repo)
+                repo.SetTransaction(_transaction);
+            
+            return _atributosProduto;
+        }
+    }
+
+    /// <summary>
+    /// Repositório de Valores de Atributos de Produto
+    /// </summary>
+    public IAtributoProdutoValorRepository AtributosProdutoValores
+    {
+        get
+        {
+            if (_atributosProdutoValores == null)
+                _atributosProdutoValores = new AtributoProdutoValorRepository(GetConnection());
+            
+            if (_atributosProdutoValores is RepositoryBase<AtributoProdutoValor> repo)
+                repo.SetTransaction(_transaction);
+            
+            return _atributosProdutoValores;
+        }
+    }
+
+    /// <summary>
+    /// Repositório de Variantes de Produto
+    /// </summary>
+    public IProdutoVarianteRepository ProdutoVariantes
+    {
+        get
+        {
+            if (_produtoVariantes == null)
+                _produtoVariantes = new ProdutoVarianteRepository(GetConnection());
+            
+            if (_produtoVariantes is RepositoryBase<ProdutoVariante> repo)
+                repo.SetTransaction(_transaction);
+            
+            return _produtoVariantes;
+        }
+    }
+
+    /// <summary>
+    /// Repositório de Valores de Variantes de Produto
+    /// </summary>
+    public IProdutoVarianteValorRepository ProdutoVariantesValores
+    {
+        get
+        {
+            if (_produtoVariantesValores == null)
+                _produtoVariantesValores = new ProdutoVarianteValorRepository(GetConnection());
+            
+            if (_produtoVariantesValores is RepositoryBase<ProdutoVarianteValor> repo)
+                repo.SetTransaction(_transaction);
+            
+            return _produtoVariantesValores;
+        }
+    }
+
+    /// <summary>
     /// Obter ou criar conexão
     /// </summary>
     private IDbConnection GetConnection()
@@ -263,6 +335,14 @@ public class UnitOfWork : IUnitOfWork, IDisposable
             repoAdi.SetTransaction(_transaction);
         if (_enderecos is RepositoryBase<Endereco> repoEnd)
             repoEnd.SetTransaction(_transaction);
+        if (_atributosProduto is RepositoryBase<AtributoProduto> repoAtrib)
+            repoAtrib.SetTransaction(_transaction);
+        if (_atributosProdutoValores is RepositoryBase<AtributoProdutoValor> repoAtribVal)
+            repoAtribVal.SetTransaction(_transaction);
+        if (_produtoVariantes is RepositoryBase<ProdutoVariante> repoProdVar)
+            repoProdVar.SetTransaction(_transaction);
+        if (_produtoVariantesValores is RepositoryBase<ProdutoVarianteValor> repoProdVarVal)
+            repoProdVarVal.SetTransaction(_transaction);
     }
 
     /// <summary>
@@ -314,6 +394,14 @@ public class UnitOfWork : IUnitOfWork, IDisposable
             repoAdi.SetTransaction(null);
         if (_enderecos is RepositoryBase<Endereco> repoEnd)
             repoEnd.SetTransaction(null);
+        if (_atributosProduto is RepositoryBase<AtributoProduto> repoAtrib)
+            repoAtrib.SetTransaction(null);
+        if (_atributosProdutoValores is RepositoryBase<AtributoProdutoValor> repoAtribVal)
+            repoAtribVal.SetTransaction(null);
+        if (_produtoVariantes is RepositoryBase<ProdutoVariante> repoProdVar)
+            repoProdVar.SetTransaction(null);
+        if (_produtoVariantesValores is RepositoryBase<ProdutoVarianteValor> repoProdVarVal)
+            repoProdVarVal.SetTransaction(null);
     }
 
     /// <summary>

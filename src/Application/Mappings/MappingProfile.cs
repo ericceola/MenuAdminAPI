@@ -166,6 +166,7 @@ public static class MappingProfile
             produto.Status,
             produto.ImagemUrl,
             produto.ImagemBlobName,
+            produto.PossuiVariantes,
             produto.Ativo,
             produto.DataCriacao
         );
@@ -182,7 +183,8 @@ public static class MappingProfile
             Ordem = request.Ordem,
             Status = request.Status,
             ImagemUrl = request.ImagemUrl,
-            ImagemBlobName = request.ImagemBlobName
+            ImagemBlobName = request.ImagemBlobName,
+            PossuiVariantes = false
         };
 
     // Variante

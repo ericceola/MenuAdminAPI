@@ -31,7 +31,8 @@ public record AtualizarProdutoRequest(
     int Ordem = 0,
     string Status = "ativo",
     string? ImagemUrl = null,
-    string? ImagemBlobName = null
+    string? ImagemBlobName = null,
+    bool PossuiVariantes = false
 );
 
 public record CriarVarianteRequest(
@@ -67,6 +68,7 @@ public record ProdutoResponse(
     string Status = "ativo",
     string? ImagemUrl = null,
     string? ImagemBlobName = null,
+    bool PossuiVariantes = false,
     bool Ativo = false,
     DateTime DataCriacao = default
 );

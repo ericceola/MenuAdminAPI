@@ -16,6 +16,12 @@ public interface IUnitOfWork : IDisposable
     IEnderecoRepository Enderecos { get; }
     IPedidoRepository Pedidos { get; }
 
+    // Variantes e Atributos de Produto
+    IAtributoProdutoRepository AtributosProduto { get; }
+    IAtributoProdutoValorRepository AtributosProdutoValores { get; }
+    IProdutoVarianteRepository ProdutoVariantes { get; }
+    IProdutoVarianteValorRepository ProdutoVariantesValores { get; }
+
     Task BeginTransactionAsync();
     Task CommitAsync();
     Task RollbackAsync();

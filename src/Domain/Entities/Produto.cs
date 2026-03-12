@@ -19,10 +19,12 @@ public class Produto
     public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
     public DateTime DataAtualizacao { get; set; } = DateTime.UtcNow;
     public DateTime? DataExclusao { get; set; }
+    public bool PossuiVariantes { get; set; } = false;
 
     // Relacionamentos
     public Subcategoria? Subcategoria { get; set; }
     public ICollection<Variante> Variantes { get; set; } = new List<Variante>();
     public ICollection<Adicional> Adicionais { get; set; } = new List<Adicional>();
     public ICollection<ItemPedido> ItensPedido { get; set; } = new List<ItemPedido>();
+    public ICollection<ProdutoVariante> ProdutoVariantes { get; set; } = new List<ProdutoVariante>();
 }

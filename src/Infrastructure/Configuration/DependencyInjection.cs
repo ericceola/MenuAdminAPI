@@ -55,6 +55,19 @@ public static class DependencyInjection
         services.AddScoped<IEnderecoRepository>(sp => 
             sp.GetRequiredService<IUnitOfWork>().Enderecos);
 
+        // Repositórios de Variantes e Atributos de Produto
+        services.AddScoped<IAtributoProdutoRepository>(sp => 
+            sp.GetRequiredService<IUnitOfWork>().AtributosProduto);
+
+        services.AddScoped<IAtributoProdutoValorRepository>(sp => 
+            sp.GetRequiredService<IUnitOfWork>().AtributosProdutoValores);
+
+        services.AddScoped<IProdutoVarianteRepository>(sp => 
+            sp.GetRequiredService<IUnitOfWork>().ProdutoVariantes);
+
+        services.AddScoped<IProdutoVarianteValorRepository>(sp => 
+            sp.GetRequiredService<IUnitOfWork>().ProdutoVariantesValores);
+
         return services;
     }
 
@@ -76,6 +89,10 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IBlobStorageService, BlobStorageService>();
+
+        // Serviços de Variantes e Atributos de Produto
+        services.AddScoped<IAtributoProdutoService, AtributoProdutoService>();
+        services.AddScoped<IProdutoVarianteService, ProdutoVarianteService>();
 
         return services;
     }
