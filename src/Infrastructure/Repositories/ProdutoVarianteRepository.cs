@@ -157,7 +157,7 @@ public class ProdutoVarianteRepository : RepositoryBase<ProdutoVariante>, IProdu
         await _connection.ExecuteAsync(sql, new { Id = id }, transaction: _transaction);
     }
 
-    public override async Task DeletarAsync(Guid id)
+    public async Task DeletarAsync(Guid id)
     {
         // Soft delete
         const string sql = @"

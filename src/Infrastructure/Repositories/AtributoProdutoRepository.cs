@@ -99,4 +99,9 @@ public class AtributoProdutoRepository : RepositoryBase<AtributoProduto>, IAtrib
         var count = await _connection.QueryFirstAsync<int>(sql, new { Nome = nome, IdExcluir = idExcluir }, transaction: _transaction);
         return count > 0;
     }
+
+    public async Task DeletarAsync(Guid id)
+    {
+        await RemoverAsync(id);
+    }
 }

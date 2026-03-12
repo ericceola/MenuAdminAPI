@@ -46,4 +46,9 @@ public class AtributoProdutoValorRepository : RepositoryBase<AtributoProdutoValo
             transaction: _transaction);
         return count > 0;
     }
+
+    public async Task DeletarAsync(Guid id)
+    {
+        await RemoverAsync(id);
+    }
 }

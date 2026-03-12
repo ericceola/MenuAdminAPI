@@ -3,7 +3,7 @@ using MenuAdminAPI.Domain.Entities;
 namespace MenuAdminAPI.Domain.Repositories;
 
 /// <summary>
-/// Interface do repositório de ProdutoVariantesValores (ligação variante <-> atributo valor)
+/// Interface do repositório de ProdutoVariantesValores (ligação variante e atributo valor)
 /// </summary>
 public interface IProdutoVarianteValorRepository
 {

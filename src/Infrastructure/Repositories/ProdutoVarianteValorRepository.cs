@@ -32,7 +32,7 @@ public class ProdutoVarianteValorRepository : RepositoryBase<ProdutoVarianteValo
         await _connection.ExecuteAsync(sql, new { ProdutoVarianteId = produtoVarianteId }, transaction: _transaction);
     }
 
-    public override async Task DeletarAsync(Guid id)
+    public async Task DeletarAsync(Guid id)
     {
         const string sql = "DELETE FROM ProdutoVariantesValores WHERE Id = @Id";
         await _connection.ExecuteAsync(sql, new { Id = id }, transaction: _transaction);
