@@ -158,6 +158,7 @@ public static class MappingProfile
         => new(
             produto.Id,
             produto.SubcategoriaId,
+            produto.EstabelecimentoId,
             produto.Nome,
             produto.Descricao,
             produto.Preco,
@@ -171,6 +172,7 @@ public static class MappingProfile
         {
             Id = Guid.NewGuid(),
             SubcategoriaId = request.SubcategoriaId,
+            EstabelecimentoId = request.EstabelecimentoId,
             Nome = request.Nome,
             Descricao = request.Descricao,
             Preco = request.Preco,
