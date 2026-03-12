@@ -32,7 +32,7 @@ public class ProdutosController : BaseController
         try
         {
             _logger.LogInformation("Listando todos os produtos");
-            
+
             var produtos = await _produtoService.ObterTodosAsync();
             return OkResponse(produtos);
         }
@@ -44,7 +44,7 @@ public class ProdutosController : BaseController
     }
 
     /// <summary>
-    /// Obter produto por ID com variantes e adicionais
+    /// Obter produto por ID
     /// </summary>
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(ProdutoResponse), StatusCodes.Status200OK)]
@@ -54,9 +54,12 @@ public class ProdutosController : BaseController
         try
         {
             _logger.LogInformation("Obtendo produto {ProdutoId}", id);
-            
-            // TODO: Implementar chamada ao service
-            return OkResponse(new ProdutoResponse());
+
+            var produto = await _produtoService.ObterPorIdAsync(id);
+            if (produto == null)
+                return NotFoundResponse();
+
+            return OkResponse(produto);
         }
         catch (Exception ex)
         {
@@ -75,13 +78,34 @@ public class ProdutosController : BaseController
         try
         {
             _logger.LogInformation("Listando produtos da subcategoria {SubcategoriaId}", subcategoriaId);
-            
+
             var produtos = await _produtoService.ObterPorSubcategoriaAsync(subcategoriaId);
             return OkResponse(produtos);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao listar produtos da subcategoria {SubcategoriaId}", subcategoriaId);
+            return InternalErrorResponse();
+        }
+    }
+
+    /// <summary>
+    /// Listar produtos por estabelecimento
+    /// </summary>
+    [HttpGet("estabelecimento/{estabelecimentoId}")]
+    [ProducesResponseType(typeof(IEnumerable<ProdutoResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> ObterPorEstabelecimento(Guid estabelecimentoId)
+    {
+        try
+        {
+            _logger.LogInformation("Listando produtos do estabelecimento {EstabelecimentoId}", estabelecimentoId);
+
+            var produtos = await _produtoService.ObterPorEstabelecimentoAsync(estabelecimentoId);
+            return OkResponse(produtos);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao listar produtos do estabelecimento {EstabelecimentoId}", estabelecimentoId);
             return InternalErrorResponse();
         }
     }
@@ -96,7 +120,7 @@ public class ProdutosController : BaseController
         try
         {
             _logger.LogInformation("Listando produtos ativos da subcategoria {SubcategoriaId}", subcategoriaId);
-            
+
             // TODO: Implementar chamada ao service
             return OkResponse(Enumerable.Empty<ProdutoResponse>());
         }
@@ -120,7 +144,7 @@ public class ProdutosController : BaseController
                 return BadRequestResponse();
 
             _logger.LogInformation("Buscando produtos com termo: {Termo}", termo);
-            
+
             // TODO: Implementar chamada ao service
             return OkResponse(Enumerable.Empty<ProdutoResponse>());
         }
@@ -145,10 +169,11 @@ public class ProdutosController : BaseController
             if (!ModelState.IsValid)
                 return BadRequestResponse();
 
-            _logger.LogInformation("Criando novo produto: {ProdutoNome}", request.Nome);
-            
-            // TODO: Implementar chamada ao service
-            return CreatedResponse(new ProdutoResponse());
+            _logger.LogInformation("Criando novo produto: {ProdutoNome} para estabelecimento {EstabelecimentoId}",
+                request.Nome, request.EstabelecimentoId);
+
+            var produto = await _produtoService.CriarAsync(request);
+            return CreatedResponse(produto);
         }
         catch (ArgumentException ex)
         {
@@ -182,7 +207,7 @@ public class ProdutosController : BaseController
                 return BadRequestResponse();
 
             _logger.LogInformation("Atualizando produto {ProdutoId}", id);
-            
+
             // TODO: Implementar chamada ao service
             return NoContent();
         }
@@ -214,7 +239,7 @@ public class ProdutosController : BaseController
         try
         {
             _logger.LogInformation("Ativando produto {ProdutoId}", id);
-            
+
             await _produtoService.AtivarAsync(id);
             return NoContent();
         }
@@ -241,7 +266,7 @@ public class ProdutosController : BaseController
         try
         {
             _logger.LogInformation("Desativando produto {ProdutoId}", id);
-            
+
             await _produtoService.DesativarAsync(id);
             return NoContent();
         }
@@ -268,7 +293,7 @@ public class ProdutosController : BaseController
         try
         {
             _logger.LogInformation("Deletando produto {ProdutoId}", id);
-            
+
             // TODO: Implementar chamada ao service
             return NoContent();
         }
@@ -299,7 +324,7 @@ public class ProdutosController : BaseController
                 return BadRequestResponse();
 
             _logger.LogInformation("Adicionando variante ao produto {ProdutoId}", id);
-            
+
             // TODO: Implementar chamada ao service
             return CreatedResponse(new VarianteResponse());
         }
@@ -331,7 +356,7 @@ public class ProdutosController : BaseController
         try
         {
             _logger.LogInformation("Removendo variante {VarianteId}", varianteId);
-            
+
             // TODO: Implementar chamada ao service
             return NoContent();
         }
@@ -362,7 +387,7 @@ public class ProdutosController : BaseController
                 return BadRequestResponse();
 
             _logger.LogInformation("Adicionando adicional ao produto {ProdutoId}", id);
-            
+
             // TODO: Implementar chamada ao service
             return CreatedResponse(new AdicionalResponse());
         }
@@ -394,7 +419,7 @@ public class ProdutosController : BaseController
         try
         {
             _logger.LogInformation("Removendo adicional {AdicionalId}", adicionalId);
-            
+
             // TODO: Implementar chamada ao service
             return NoContent();
         }

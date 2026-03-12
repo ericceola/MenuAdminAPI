@@ -21,7 +21,7 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
     public async Task<IEnumerable<Produto>> ObterPorSubcategoriaAsync(Guid subcategoriaId)
     {
         const string sql = @"
-            SELECT Id, SubcategoriaId, Nome, Descricao, Preco, ImagemUrl, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, SubcategoriaId, EstabelecimentoId, Nome, Descricao, Preco, ImagemUrl, Ativo, DataCriacao, DataAtualizacao
             FROM Produtos
             WHERE SubcategoriaId = @SubcategoriaId
             ORDER BY Nome";
@@ -35,12 +35,26 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
     public async Task<IEnumerable<Produto>> ObterAtivosPorSubcategoriaAsync(Guid subcategoriaId)
     {
         const string sql = @"
-            SELECT Id, SubcategoriaId, Nome, Descricao, Preco, ImagemUrl, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, SubcategoriaId, EstabelecimentoId, Nome, Descricao, Preco, ImagemUrl, Ativo, DataCriacao, DataAtualizacao
             FROM Produtos
             WHERE SubcategoriaId = @SubcategoriaId AND Ativo = 1
             ORDER BY Nome";
 
         return await _connection.QueryAsync<Produto>(sql, new { SubcategoriaId = subcategoriaId });
+    }
+
+    /// <summary>
+    /// Obter produtos por estabelecimento
+    /// </summary>
+    public async Task<IEnumerable<Produto>> ObterPorEstabelecimentoAsync(Guid estabelecimentoId)
+    {
+        const string sql = @"
+            SELECT Id, SubcategoriaId, EstabelecimentoId, Nome, Descricao, Preco, ImagemUrl, Ativo, DataCriacao, DataAtualizacao
+            FROM Produtos
+            WHERE EstabelecimentoId = @EstabelecimentoId
+            ORDER BY Nome";
+
+        return await _connection.QueryAsync<Produto>(sql, new { EstabelecimentoId = estabelecimentoId });
     }
 
     /// <summary>
@@ -52,7 +66,7 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
         var termoLike = string.IsNullOrWhiteSpace(termo) ? "%" : $"%{termo}%";
 
         const string sql = @"
-            SELECT Id, SubcategoriaId, Nome, Descricao, Preco, ImagemUrl, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, SubcategoriaId, EstabelecimentoId, Nome, Descricao, Preco, ImagemUrl, Ativo, DataCriacao, DataAtualizacao
             FROM Produtos
             WHERE Ativo = 1 AND (Nome LIKE @Termo OR Descricao LIKE @Termo)
             ORDER BY Nome";
@@ -129,9 +143,7 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
             FROM ItemPedidos ip
             INNER JOIN Produtos p ON ip.ProdutoId = p.Id
             INNER JOIN Pedidos ped ON ip.PedidoId = ped.Id
-            INNER JOIN Subcategorias sc ON p.SubcategoriaId = sc.Id
-            INNER JOIN Categorias c ON sc.CategoriaId = c.Id
-            WHERE c.EstabelecimentoId = @EstabelecimentoId AND ped.Status IN (1, 2, 3)
+            WHERE p.EstabelecimentoId = @EstabelecimentoId AND ped.Status IN (1, 2, 3)
             GROUP BY p.Id, p.Nome
             ORDER BY TotalVendido DESC";
 

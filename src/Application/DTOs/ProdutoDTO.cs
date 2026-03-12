@@ -2,6 +2,7 @@ namespace MenuAdminAPI.Application.DTOs;
 
 public record CriarProdutoRequest(
     Guid SubcategoriaId,
+    Guid EstabelecimentoId,
     string Nome,
     string Descricao,
     decimal Preco,
@@ -52,6 +53,7 @@ public record AtualizarAdicionalRequest(
 public record ProdutoResponse(
     Guid Id = default,
     Guid SubcategoriaId = default,
+    Guid EstabelecimentoId = default,
     string Nome = "",
     string Descricao = "",
     decimal Preco = 0m,
@@ -78,6 +80,7 @@ public record AdicionalResponse(
 
 public record ProdutoComDetalhesResponse(
     Guid Id,
+    Guid EstabelecimentoId,
     string Nome,
     string Descricao,
     decimal Preco,

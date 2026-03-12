@@ -8,6 +8,7 @@ public interface IProdutoService
     Task<IEnumerable<ProdutoResponse>> ObterTodosAsync();
     Task<ProdutoResponse?> ObterPorIdAsync(Guid id);
     Task<IEnumerable<ProdutoResponse>> ObterPorSubcategoriaAsync(Guid subcategoriaId);
+    Task<IEnumerable<ProdutoResponse>> ObterPorEstabelecimentoAsync(Guid estabelecimentoId);
     Task<ProdutoResponse> CriarAsync(CriarProdutoRequest request);
     Task<ProdutoResponse> AtualizarAsync(Guid id, AtualizarProdutoRequest request);
     Task AtivarAsync(Guid id);
@@ -32,17 +33,47 @@ public class ProdutoService : IProdutoService
 
     public async Task<ProdutoResponse?> ObterPorIdAsync(Guid id)
     {
-        // TODO: Implementar busca de produto por ID
-        return null;
+        var produto = await _unitOfWork.Produtos.ObterPorIdAsync(id);
+        if (produto == null) return null;
+
+        return new ProdutoResponse(
+            Id: produto.Id,
+            SubcategoriaId: produto.SubcategoriaId,
+            EstabelecimentoId: produto.EstabelecimentoId,
+            Nome: produto.Nome,
+            Descricao: produto.Descricao ?? string.Empty,
+            Preco: produto.Preco,
+            ImagemUrl: produto.ImagemUrl,
+            Ativo: produto.Ativo,
+            DataCriacao: produto.DataCriacao
+        );
     }
 
     public async Task<IEnumerable<ProdutoResponse>> ObterPorSubcategoriaAsync(Guid subcategoriaId)
     {
         var produtos = await _unitOfWork.Produtos.ObterPorSubcategoriaAsync(subcategoriaId);
-        
+
         return produtos.Select(p => new ProdutoResponse(
             Id: p.Id,
             SubcategoriaId: p.SubcategoriaId,
+            EstabelecimentoId: p.EstabelecimentoId,
+            Nome: p.Nome,
+            Descricao: p.Descricao ?? string.Empty,
+            Preco: p.Preco,
+            ImagemUrl: p.ImagemUrl,
+            Ativo: p.Ativo,
+            DataCriacao: p.DataCriacao
+        ));
+    }
+
+    public async Task<IEnumerable<ProdutoResponse>> ObterPorEstabelecimentoAsync(Guid estabelecimentoId)
+    {
+        var produtos = await _unitOfWork.Produtos.ObterPorEstabelecimentoAsync(estabelecimentoId);
+
+        return produtos.Select(p => new ProdutoResponse(
+            Id: p.Id,
+            SubcategoriaId: p.SubcategoriaId,
+            EstabelecimentoId: p.EstabelecimentoId,
             Nome: p.Nome,
             Descricao: p.Descricao ?? string.Empty,
             Preco: p.Preco,
@@ -59,6 +90,7 @@ public class ProdutoService : IProdutoService
         {
             Id = Guid.NewGuid(),
             SubcategoriaId = request.SubcategoriaId,
+            EstabelecimentoId = request.EstabelecimentoId,
             Nome = request.Nome.Trim(),
             Descricao = request.Descricao?.Trim() ?? "",
             Preco = request.Preco,
@@ -108,6 +140,7 @@ public class ProdutoService : IProdutoService
         return new ProdutoResponse(
             Id: produto.Id,
             SubcategoriaId: produto.SubcategoriaId,
+            EstabelecimentoId: produto.EstabelecimentoId,
             Nome: produto.Nome,
             Descricao: produto.Descricao,
             Preco: produto.Preco,
