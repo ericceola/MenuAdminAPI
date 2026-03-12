@@ -6,7 +6,10 @@ public record CriarProdutoRequest(
     string Nome,
     string Descricao,
     decimal Preco,
+    int Ordem = 0,
+    string Status = "ativo",
     string? ImagemUrl = null,
+    string? ImagemBlobName = null,
     List<CriarVarianteDto>? Variantes = null,
     List<CriarAdicionalDto>? Adicionais = null
 );
@@ -25,7 +28,10 @@ public record AtualizarProdutoRequest(
     string Nome,
     string Descricao,
     decimal Preco,
-    string? ImagemUrl = null
+    int Ordem = 0,
+    string Status = "ativo",
+    string? ImagemUrl = null,
+    string? ImagemBlobName = null
 );
 
 public record CriarVarianteRequest(
@@ -57,7 +63,10 @@ public record ProdutoResponse(
     string Nome = "",
     string Descricao = "",
     decimal Preco = 0m,
+    int Ordem = 0,
+    string Status = "ativo",
     string? ImagemUrl = null,
+    string? ImagemBlobName = null,
     bool Ativo = false,
     DateTime DataCriacao = default
 );
@@ -84,7 +93,10 @@ public record ProdutoComDetalhesResponse(
     string Nome,
     string Descricao,
     decimal Preco,
+    int Ordem,
+    string Status,
     string? ImagemUrl,
+    string? ImagemBlobName,
     IEnumerable<VarianteResponse> Variantes,
     IEnumerable<AdicionalResponse> Adicionais
 );

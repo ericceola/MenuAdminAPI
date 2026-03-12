@@ -25,9 +25,24 @@ public class ProdutoService : IProdutoService
         _unitOfWork = unitOfWork;
     }
 
+    private static ProdutoResponse MapToResponse(Domain.Entities.Produto p) => new(
+        Id: p.Id,
+        SubcategoriaId: p.SubcategoriaId,
+        EstabelecimentoId: p.EstabelecimentoId,
+        Nome: p.Nome,
+        Descricao: p.Descricao ?? string.Empty,
+        Preco: p.Preco,
+        Ordem: p.Ordem,
+        Status: p.Status,
+        ImagemUrl: p.ImagemUrl,
+        ImagemBlobName: p.ImagemBlobName,
+        Ativo: p.Ativo,
+        DataCriacao: p.DataCriacao
+    );
+
     public async Task<IEnumerable<ProdutoResponse>> ObterTodosAsync()
     {
-        // TODO: Implementar busca de produtos do repositório
+        // TODO: Implementar busca de todos os produtos
         return Enumerable.Empty<ProdutoResponse>();
     }
 
@@ -35,57 +50,23 @@ public class ProdutoService : IProdutoService
     {
         var produto = await _unitOfWork.Produtos.ObterPorIdAsync(id);
         if (produto == null) return null;
-
-        return new ProdutoResponse(
-            Id: produto.Id,
-            SubcategoriaId: produto.SubcategoriaId,
-            EstabelecimentoId: produto.EstabelecimentoId,
-            Nome: produto.Nome,
-            Descricao: produto.Descricao ?? string.Empty,
-            Preco: produto.Preco,
-            ImagemUrl: produto.ImagemUrl,
-            Ativo: produto.Ativo,
-            DataCriacao: produto.DataCriacao
-        );
+        return MapToResponse(produto);
     }
 
     public async Task<IEnumerable<ProdutoResponse>> ObterPorSubcategoriaAsync(Guid subcategoriaId)
     {
         var produtos = await _unitOfWork.Produtos.ObterPorSubcategoriaAsync(subcategoriaId);
-
-        return produtos.Select(p => new ProdutoResponse(
-            Id: p.Id,
-            SubcategoriaId: p.SubcategoriaId,
-            EstabelecimentoId: p.EstabelecimentoId,
-            Nome: p.Nome,
-            Descricao: p.Descricao ?? string.Empty,
-            Preco: p.Preco,
-            ImagemUrl: p.ImagemUrl,
-            Ativo: p.Ativo,
-            DataCriacao: p.DataCriacao
-        ));
+        return produtos.Select(MapToResponse);
     }
 
     public async Task<IEnumerable<ProdutoResponse>> ObterPorEstabelecimentoAsync(Guid estabelecimentoId)
     {
         var produtos = await _unitOfWork.Produtos.ObterPorEstabelecimentoAsync(estabelecimentoId);
-
-        return produtos.Select(p => new ProdutoResponse(
-            Id: p.Id,
-            SubcategoriaId: p.SubcategoriaId,
-            EstabelecimentoId: p.EstabelecimentoId,
-            Nome: p.Nome,
-            Descricao: p.Descricao ?? string.Empty,
-            Preco: p.Preco,
-            ImagemUrl: p.ImagemUrl,
-            Ativo: p.Ativo,
-            DataCriacao: p.DataCriacao
-        ));
+        return produtos.Select(MapToResponse);
     }
 
     public async Task<ProdutoResponse> CriarAsync(CriarProdutoRequest request)
     {
-        // Criar o produto
         var produto = new Domain.Entities.Produto
         {
             Id = Guid.NewGuid(),
@@ -94,9 +75,13 @@ public class ProdutoService : IProdutoService
             Nome = request.Nome.Trim(),
             Descricao = request.Descricao?.Trim() ?? "",
             Preco = request.Preco,
+            Ordem = request.Ordem,
+            Status = request.Status,
             ImagemUrl = request.ImagemUrl?.Trim(),
+            ImagemBlobName = request.ImagemBlobName?.Trim(),
             Ativo = true,
-            DataCriacao = DateTime.UtcNow
+            DataCriacao = DateTime.UtcNow,
+            DataAtualizacao = DateTime.UtcNow
         };
 
         await _unitOfWork.Produtos.AdicionarAsync(produto);
@@ -137,23 +122,28 @@ public class ProdutoService : IProdutoService
 
         await _unitOfWork.SaveChangesAsync();
 
-        return new ProdutoResponse(
-            Id: produto.Id,
-            SubcategoriaId: produto.SubcategoriaId,
-            EstabelecimentoId: produto.EstabelecimentoId,
-            Nome: produto.Nome,
-            Descricao: produto.Descricao,
-            Preco: produto.Preco,
-            ImagemUrl: produto.ImagemUrl,
-            Ativo: produto.Ativo,
-            DataCriacao: produto.DataCriacao
-        );
+        return MapToResponse(produto);
     }
 
     public async Task<ProdutoResponse> AtualizarAsync(Guid id, AtualizarProdutoRequest request)
     {
-        // TODO: Implementar atualização de produto
-        throw new NotImplementedException();
+        var produto = await _unitOfWork.Produtos.ObterPorIdAsync(id);
+        if (produto == null)
+            throw new InvalidOperationException($"Produto com ID {id} não encontrado");
+
+        produto.Nome = request.Nome.Trim();
+        produto.Descricao = request.Descricao?.Trim() ?? "";
+        produto.Preco = request.Preco;
+        produto.Ordem = request.Ordem;
+        produto.Status = request.Status;
+        produto.ImagemUrl = request.ImagemUrl?.Trim();
+        produto.ImagemBlobName = request.ImagemBlobName?.Trim();
+        produto.DataAtualizacao = DateTime.UtcNow;
+
+        await _unitOfWork.Produtos.AtualizarAsync(produto);
+        await _unitOfWork.SaveChangesAsync();
+
+        return MapToResponse(produto);
     }
 
     public async Task AtivarAsync(Guid id)
@@ -163,6 +153,7 @@ public class ProdutoService : IProdutoService
             throw new InvalidOperationException($"Produto com ID {id} não encontrado");
 
         produto.Ativo = true;
+        produto.Status = "ativo";
         await _unitOfWork.Produtos.AtualizarAsync(produto);
         await _unitOfWork.SaveChangesAsync();
     }
@@ -174,12 +165,14 @@ public class ProdutoService : IProdutoService
             throw new InvalidOperationException($"Produto com ID {id} não encontrado");
 
         produto.Ativo = false;
+        produto.Status = "inativo";
         await _unitOfWork.Produtos.AtualizarAsync(produto);
         await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task DeletarAsync(Guid id)
     {
-        // TODO: Implementar deleção de produto
+        await _unitOfWork.Produtos.DeletarComCascataAsync(id);
+        await _unitOfWork.SaveChangesAsync();
     }
 }

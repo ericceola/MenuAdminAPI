@@ -160,9 +160,12 @@ public static class MappingProfile
             produto.SubcategoriaId,
             produto.EstabelecimentoId,
             produto.Nome,
-            produto.Descricao,
+            produto.Descricao ?? string.Empty,
             produto.Preco,
+            produto.Ordem,
+            produto.Status,
             produto.ImagemUrl,
+            produto.ImagemBlobName,
             produto.Ativo,
             produto.DataCriacao
         );
@@ -176,7 +179,10 @@ public static class MappingProfile
             Nome = request.Nome,
             Descricao = request.Descricao,
             Preco = request.Preco,
-            ImagemUrl = request.ImagemUrl
+            Ordem = request.Ordem,
+            Status = request.Status,
+            ImagemUrl = request.ImagemUrl,
+            ImagemBlobName = request.ImagemBlobName
         };
 
     // Variante

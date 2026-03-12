@@ -9,12 +9,16 @@ public class Produto
     public Guid SubcategoriaId { get; set; }
     public Guid EstabelecimentoId { get; set; }
     public string Nome { get; set; } = string.Empty;
-    public string Descricao { get; set; } = string.Empty;
+    public string? Descricao { get; set; }
     public decimal Preco { get; set; }
     public string? ImagemUrl { get; set; }
+    public string? ImagemBlobName { get; set; }
+    public int Ordem { get; set; } = 0;
+    public string Status { get; set; } = "ativo";
     public bool Ativo { get; set; } = true;
     public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
     public DateTime DataAtualizacao { get; set; } = DateTime.UtcNow;
+    public DateTime? DataExclusao { get; set; }
 
     // Relacionamentos
     public Subcategoria? Subcategoria { get; set; }

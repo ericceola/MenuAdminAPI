@@ -21,10 +21,11 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
     public async Task<IEnumerable<Produto>> ObterPorSubcategoriaAsync(Guid subcategoriaId)
     {
         const string sql = @"
-            SELECT Id, SubcategoriaId, EstabelecimentoId, Nome, Descricao, Preco, ImagemUrl, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, SubcategoriaId, EstabelecimentoId, Nome, Descricao, Preco, ImagemUrl, ImagemBlobName,
+                   Ordem, Status, Ativo, DataCriacao, DataAtualizacao, DataExclusao
             FROM Produtos
             WHERE SubcategoriaId = @SubcategoriaId
-            ORDER BY Nome";
+            ORDER BY Ordem, Nome";
 
         return await _connection.QueryAsync<Produto>(sql, new { SubcategoriaId = subcategoriaId });
     }
@@ -35,10 +36,11 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
     public async Task<IEnumerable<Produto>> ObterAtivosPorSubcategoriaAsync(Guid subcategoriaId)
     {
         const string sql = @"
-            SELECT Id, SubcategoriaId, EstabelecimentoId, Nome, Descricao, Preco, ImagemUrl, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, SubcategoriaId, EstabelecimentoId, Nome, Descricao, Preco, ImagemUrl, ImagemBlobName,
+                   Ordem, Status, Ativo, DataCriacao, DataAtualizacao, DataExclusao
             FROM Produtos
             WHERE SubcategoriaId = @SubcategoriaId AND Ativo = 1
-            ORDER BY Nome";
+            ORDER BY Ordem, Nome";
 
         return await _connection.QueryAsync<Produto>(sql, new { SubcategoriaId = subcategoriaId });
     }
@@ -49,10 +51,11 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
     public async Task<IEnumerable<Produto>> ObterPorEstabelecimentoAsync(Guid estabelecimentoId)
     {
         const string sql = @"
-            SELECT Id, SubcategoriaId, EstabelecimentoId, Nome, Descricao, Preco, ImagemUrl, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, SubcategoriaId, EstabelecimentoId, Nome, Descricao, Preco, ImagemUrl, ImagemBlobName,
+                   Ordem, Status, Ativo, DataCriacao, DataAtualizacao, DataExclusao
             FROM Produtos
             WHERE EstabelecimentoId = @EstabelecimentoId
-            ORDER BY Nome";
+            ORDER BY Ordem, Nome";
 
         return await _connection.QueryAsync<Produto>(sql, new { EstabelecimentoId = estabelecimentoId });
     }
@@ -62,14 +65,14 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
     /// </summary>
     public async Task<IEnumerable<Produto>> BuscarAsync(string termo)
     {
-        // Se termo vazio, busca todos os produtos ativos
         var termoLike = string.IsNullOrWhiteSpace(termo) ? "%" : $"%{termo}%";
 
         const string sql = @"
-            SELECT Id, SubcategoriaId, EstabelecimentoId, Nome, Descricao, Preco, ImagemUrl, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, SubcategoriaId, EstabelecimentoId, Nome, Descricao, Preco, ImagemUrl, ImagemBlobName,
+                   Ordem, Status, Ativo, DataCriacao, DataAtualizacao, DataExclusao
             FROM Produtos
             WHERE Ativo = 1 AND (Nome LIKE @Termo OR Descricao LIKE @Termo)
-            ORDER BY Nome";
+            ORDER BY Ordem, Nome";
 
         return await _connection.QueryAsync<Produto>(sql, new { Termo = termoLike });
     }
@@ -109,7 +112,7 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
     {
         const string sql = @"
             UPDATE Produtos
-            SET Ativo = 1, DataAtualizacao = GETUTCDATE()
+            SET Ativo = 1, Status = 'ativo', DataAtualizacao = GETUTCDATE()
             WHERE Id = @Id";
 
         await _connection.ExecuteAsync(sql, new { Id = id });
@@ -122,7 +125,7 @@ public class ProdutoRepository : RepositoryBase<Produto>, IProdutoRepository
     {
         const string sql = @"
             UPDATE Produtos
-            SET Ativo = 0, DataAtualizacao = GETUTCDATE()
+            SET Ativo = 0, Status = 'inativo', DataAtualizacao = GETUTCDATE()
             WHERE Id = @Id";
 
         await _connection.ExecuteAsync(sql, new { Id = id });
