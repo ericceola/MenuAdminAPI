@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MenuAdminAPI.Application.DTOs;
 using MenuAdminAPI.Application.Services;
+using MenuAdminAPI.Domain.Repositories;
 
 namespace MenuAdminAPI.Presentation.Controllers;
 
@@ -14,11 +15,13 @@ namespace MenuAdminAPI.Presentation.Controllers;
 public class ProdutosController : BaseController
 {
     private readonly IProdutoService _produtoService;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<ProdutosController> _logger;
 
-    public ProdutosController(IProdutoService produtoService, ILogger<ProdutosController> logger)
+    public ProdutosController(IProdutoService produtoService, IUnitOfWork unitOfWork, ILogger<ProdutosController> logger)
     {
         _produtoService = produtoService ?? throw new ArgumentNullException(nameof(produtoService));
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -368,6 +371,33 @@ public class ProdutosController : BaseController
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao remover variante {VarianteId}", varianteId);
+            return InternalErrorResponse();
+        }
+    }
+
+    /// <summary>
+    /// Listar adicionais de um produto
+    /// </summary>
+    [HttpGet("{id}/adicionais")]
+    [ProducesResponseType(typeof(IEnumerable<AdicionalResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> ListarAdicionais(Guid id)
+    {
+        try
+        {
+            _logger.LogInformation("Listando adicionais do produto {ProdutoId}", id);
+            var adicionais = await _unitOfWork.Adicionais.ObterPorProdutoAsync(id);
+            var response = adicionais.Select(a => new AdicionalResponse(
+                Id: a.Id,
+                ProdutoId: a.ProdutoId,
+                Nome: a.Nome,
+                Preco: a.Preco,
+                Ativo: a.Ativo
+            ));
+            return OkResponse(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao listar adicionais do produto {ProdutoId}", id);
             return InternalErrorResponse();
         }
     }
