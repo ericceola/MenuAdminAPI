@@ -21,7 +21,7 @@ public class AdicionalRepository : RepositoryBase<Adicional>, IAdicionalReposito
     public async Task<IEnumerable<Adicional>> ObterPorProdutoAsync(Guid produtoId)
     {
         const string sql = @"
-            SELECT Id, ProdutoId, Nome, Descricao, Preco, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, ProdutoId, Nome, Preco, Ativo, DataCriacao, DataAtualizacao
             FROM Adicionais
             WHERE ProdutoId = @ProdutoId
             ORDER BY Nome";
@@ -35,7 +35,7 @@ public class AdicionalRepository : RepositoryBase<Adicional>, IAdicionalReposito
     public async Task<IEnumerable<Adicional>> ObterAtivosPorProdutoAsync(Guid produtoId)
     {
         const string sql = @"
-            SELECT Id, ProdutoId, Nome, Descricao, Preco, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, ProdutoId, Nome, Preco, Ativo, DataCriacao, DataAtualizacao
             FROM Adicionais
             WHERE ProdutoId = @ProdutoId AND Ativo = 1
             ORDER BY Nome";
@@ -52,7 +52,7 @@ public class AdicionalRepository : RepositoryBase<Adicional>, IAdicionalReposito
             return null;
 
         const string sql = @"
-            SELECT Id, ProdutoId, Nome, Descricao, Preco, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, ProdutoId, Nome, Preco, Ativo, DataCriacao, DataAtualizacao
             FROM Adicionais
             WHERE Nome = @Nome AND ProdutoId = @ProdutoId";
 
@@ -96,9 +96,9 @@ public class AdicionalRepository : RepositoryBase<Adicional>, IAdicionalReposito
             return Enumerable.Empty<Adicional>();
 
         const string sql = @"
-            SELECT Id, ProdutoId, Nome, Descricao, Preco, Ativo, DataCriacao, DataAtualizacao
+            SELECT Id, ProdutoId, Nome, Preco, Ativo, DataCriacao, DataAtualizacao
             FROM Adicionais
-            WHERE Ativo = 1 AND (Nome LIKE @Termo OR Descricao LIKE @Termo)
+            WHERE Ativo = 1 AND Nome LIKE @Termo
             ORDER BY Nome";
 
         var termoLike = $"%{termo}%";
